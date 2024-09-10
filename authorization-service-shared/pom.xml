@@ -29,4 +29,24 @@
         </dependency>
     </dependencies>
 
+     <!-- Add the build section here -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                  <encoding>UTF-8</encoding>
+                  <!-- <source>11</source>  or another higher version, e.g. 17
+                   <target>11</target>
+                    <compilerArgs>
+                        <arg> add-opens</arg>
+                        <arg>jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                    </compilerArgs> -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
