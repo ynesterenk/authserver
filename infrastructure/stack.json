@@ -56,7 +56,7 @@
         "Role": {
           "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/${UserName}-server-lambda-role"
         },
-        "Runtime": "java8",
+        "Runtime": "java11",
         "Timeout": 30,
         "Tags": [
           {
@@ -123,7 +123,7 @@
         "Role": {
           "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/${UserName}-basic-authenticator-lambda-role"
         },
-        "Runtime": "java8",
+        "Runtime": "java11",
         "Timeout": 30,
         "Tags": [
           {
@@ -171,7 +171,7 @@
         "Role": {
           "Fn::Sub": "arn:aws:iam::${AWS::AccountId}:role/${UserName}-jwt-authorizer-lambda-role"
         },
-        "Runtime": "java8",
+        "Runtime": "java11",
         "Timeout": 30,
         "Tags": [
           {
