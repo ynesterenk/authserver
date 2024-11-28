@@ -1,7 +1,7 @@
-package com.github.vitalibo.authorization.server.infrastructure.aws;
+package server.infrastructure.aws;
 
-import com.github.vitalibo.authorization.server.core.facade.ChangePasswordFacade;
-import com.github.vitalibo.authorization.server.core.facade.ClientCredentialsFacade;
+import server.core.facade.ChangePasswordFacade;
+import server.core.facade.ClientCredentialsFacade;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

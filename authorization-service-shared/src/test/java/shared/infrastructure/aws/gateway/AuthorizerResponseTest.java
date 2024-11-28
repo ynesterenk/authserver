@@ -1,10 +1,10 @@
-package com.github.vitalibo.authorization.shared.infrastructure.aws.gateway;
+package shared.infrastructure.aws.gateway;
 
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Resource;
 import com.amazonaws.auth.policy.Statement;
 import com.amazonaws.util.json.Jackson;
-import com.github.vitalibo.authorization.shared.TestHelper;
+import shared.TestHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

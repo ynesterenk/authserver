@@ -1,6 +1,6 @@
-package com.github.vitalibo.authorization.server.core;
+package server.core;
 
-import com.github.vitalibo.authorization.shared.core.AuthorizationServiceException;
+import shared.core.AuthorizationServiceException;
 
 public class UserPoolException extends AuthorizationServiceException {
 

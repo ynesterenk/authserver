@@ -1,7 +1,7 @@
-package com.github.vitalibo.authorization.server.core.translator;
+package server.core.translator;
 
-import com.github.vitalibo.authorization.server.core.model.ChangePasswordRequest;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyRequest;
+import server.core.model.ChangePasswordRequest;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
 import org.apache.http.HttpHeaders;
 import org.testng.Assert;
 import org.testng.annotations.Test;

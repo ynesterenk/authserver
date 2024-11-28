@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy;
+package shared.infrastructure.aws.gateway.proxy;
 
 import lombok.Data;
 
@@ -17,5 +17,4 @@ public class ProxyRequest {
     private Map<String, ?> requestContext;
     private String body;
     private Boolean isBase64Encoded;
-
 }

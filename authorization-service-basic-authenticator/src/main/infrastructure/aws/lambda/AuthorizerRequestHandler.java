@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.basic.infrastructure.aws.lambda;
+package basic.infrastructure.aws.lambda;
 
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Resource;
@@ -7,12 +7,12 @@ import com.amazonaws.services.cognitoidp.model.NotAuthorizedException;
 import com.amazonaws.services.cognitoidp.model.UserNotFoundException;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.github.vitalibo.authorization.basic.core.HttpBasicAuthenticator;
-import com.github.vitalibo.authorization.basic.core.Principal;
-import com.github.vitalibo.authorization.basic.infrastructure.aws.Factory;
-import com.github.vitalibo.authorization.shared.core.http.BasicAuthenticationException;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.AuthorizerRequest;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.AuthorizerResponse;
+import basic.core.HttpBasicAuthenticator;
+import basic.core.Principal;
+import basic.infrastructure.aws.Factory;
+import shared.core.http.BasicAuthenticationException;
+import shared.infrastructure.aws.gateway.AuthorizerRequest;
+import shared.infrastructure.aws.gateway.AuthorizerResponse;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

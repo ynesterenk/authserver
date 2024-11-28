@@ -1,7 +1,7 @@
-package com.github.vitalibo.authorization.jwt.infrastructure.aws;
+package jwt.infrastructure.aws;
 
-import com.github.vitalibo.authorization.jwt.core.Jwt;
-import com.github.vitalibo.authorization.jwt.core.PolicyRepository;
+import jwt.core.Jwt;
+import jwt.core.PolicyRepository;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

@@ -1,6 +1,6 @@
-package com.github.vitalibo.authorization.basic.core;
+package basic.core;
 
-import com.github.vitalibo.authorization.shared.core.http.BasicAuthenticationException;
+import shared.core.http.BasicAuthenticationException;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;

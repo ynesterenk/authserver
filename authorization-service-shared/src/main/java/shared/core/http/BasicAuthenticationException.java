@@ -1,6 +1,6 @@
-package com.github.vitalibo.authorization.shared.core.http;
+package shared.core.http;
 
-import com.github.vitalibo.authorization.shared.core.AuthorizationServiceException;
+import shared.core.AuthorizationServiceException;
 
 public class BasicAuthenticationException extends AuthorizationServiceException {
 

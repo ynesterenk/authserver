@@ -1,8 +1,8 @@
-package com.github.vitalibo.authorization.basic.infrastructure.aws;
+package basic.infrastructure.aws;
 
-import com.github.vitalibo.authorization.basic.core.HttpBasicAuthenticator;
-import com.github.vitalibo.authorization.basic.core.UserPool;
-import com.github.vitalibo.authorization.basic.infrastructure.aws.cognito.CognitoUserPool;
+import basic.core.HttpBasicAuthenticator;
+import basic.core.UserPool;
+import basic.infrastructure.aws.cognito.CognitoUserPool;
 import lombok.Getter;
 
 import java.util.Map;

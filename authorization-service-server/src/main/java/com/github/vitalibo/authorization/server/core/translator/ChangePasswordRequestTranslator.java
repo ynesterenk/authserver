@@ -1,10 +1,10 @@
-package com.github.vitalibo.authorization.server.core.translator;
+package server.core.translator;
 
 import com.amazonaws.util.StringUtils;
 import com.amazonaws.util.json.Jackson;
-import com.github.vitalibo.authorization.server.core.model.ChangePasswordRequest;
-import com.github.vitalibo.authorization.shared.core.http.FormUrlencodedScheme;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyRequest;
+import server.core.model.ChangePasswordRequest;
+import shared.core.http.FormUrlencodedScheme;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
 
 public class ChangePasswordRequestTranslator {
 

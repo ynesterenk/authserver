@@ -1,17 +1,17 @@
-package com.github.vitalibo.authorization.server.core.facade;
+package server.core.facade;
 
-import com.github.vitalibo.authorization.server.core.Facade;
-import com.github.vitalibo.authorization.server.core.UserPool;
-import com.github.vitalibo.authorization.server.core.UserPoolException;
-import com.github.vitalibo.authorization.server.core.model.ClientCredentialsRequest;
-import com.github.vitalibo.authorization.server.core.model.ClientCredentialsResponse;
-import com.github.vitalibo.authorization.server.core.translator.ClientCredentialsRequestTranslator;
-import com.github.vitalibo.authorization.shared.core.validation.ErrorState;
-import com.github.vitalibo.authorization.shared.core.validation.Rule;
-import com.github.vitalibo.authorization.shared.core.validation.ValidationException;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyError;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyRequest;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyResponse;
+import server.core.Facade;
+import server.core.UserPool;
+import server.core.UserPoolException;
+import server.core.model.ClientCredentialsRequest;
+import server.core.model.ClientCredentialsResponse;
+import server.core.translator.ClientCredentialsRequestTranslator;
+import shared.core.validation.ErrorState;
+import shared.core.validation.Rule;
+import shared.core.validation.ValidationException;
+import shared.infrastructure.aws.gateway.proxy.ProxyError;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
+import shared.infrastructure.aws.gateway.proxy.ProxyResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 

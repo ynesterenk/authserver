@@ -1,17 +1,17 @@
-package com.github.vitalibo.authorization.jwt.infrastructure.aws.lambda;
+package jwt.infrastructure.aws.lambda;
 
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Resource;
 import com.amazonaws.auth.policy.Statement;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.util.json.Jackson;
-import com.github.vitalibo.authorization.jwt.core.Claims;
-import com.github.vitalibo.authorization.jwt.core.Jwt;
-import com.github.vitalibo.authorization.jwt.core.JwtVerificationException;
-import com.github.vitalibo.authorization.jwt.core.PolicyRepository;
-import com.github.vitalibo.authorization.jwt.infrastructure.aws.Factory;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.AuthorizerRequest;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.AuthorizerResponse;
+import jwt.core.Claims;
+import jwt.core.Jwt;
+import jwt.core.JwtVerificationException;
+import jwt.core.PolicyRepository;
+import jwt.infrastructure.aws.Factory;
+import shared.infrastructure.aws.gateway.AuthorizerRequest;
+import shared.infrastructure.aws.gateway.AuthorizerResponse;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;

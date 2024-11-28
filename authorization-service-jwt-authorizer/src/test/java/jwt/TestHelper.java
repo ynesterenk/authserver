@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.jwt;
+package jwt;
 
 import com.amazonaws.util.json.Jackson;
 

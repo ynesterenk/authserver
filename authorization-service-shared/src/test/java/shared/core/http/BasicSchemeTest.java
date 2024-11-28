@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.shared.core.http;
+package shared.core.http;
 
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;

@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.shared.core.http;
+package shared.core.http;
 
 import com.amazonaws.util.StringUtils;
 

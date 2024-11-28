@@ -1,12 +1,12 @@
-package com.github.vitalibo.authorization.server.core;
+package server.core;
 
 import com.amazonaws.util.StringUtils;
-import com.github.vitalibo.authorization.server.core.model.ChangePasswordRequest;
-import com.github.vitalibo.authorization.server.core.model.ClientCredentialsRequest;
-import com.github.vitalibo.authorization.shared.core.http.BasicAuthenticationException;
-import com.github.vitalibo.authorization.shared.core.http.BasicScheme;
-import com.github.vitalibo.authorization.shared.core.validation.ErrorState;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyRequest;
+import server.core.model.ChangePasswordRequest;
+import server.core.model.ClientCredentialsRequest;
+import shared.core.http.BasicAuthenticationException;
+import shared.core.http.BasicScheme;
+import shared.core.validation.ErrorState;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
 
 public final class ValidationRules {
 

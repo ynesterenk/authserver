@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.server.core;
+package server.core;
 
 import lombok.Getter;
 

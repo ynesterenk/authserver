@@ -1,16 +1,16 @@
-package com.github.vitalibo.authorization.server.infrastructure.aws.lambda;
+package server.infrastructure.aws.lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.github.vitalibo.authorization.server.core.Facade;
-import com.github.vitalibo.authorization.server.core.Route;
-import com.github.vitalibo.authorization.server.core.Router;
-import com.github.vitalibo.authorization.server.infrastructure.aws.Factory;
-import com.github.vitalibo.authorization.shared.core.validation.ValidationException;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyError;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyRequest;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyRequestTranslator;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyResponse;
+import server.core.Facade;
+import server.core.Route;
+import server.core.Router;
+import server.infrastructure.aws.Factory;
+import shared.core.validation.ValidationException;
+import shared.infrastructure.aws.gateway.proxy.ProxyError;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequestTranslator;
+import shared.infrastructure.aws.gateway.proxy.ProxyResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpStatus;
 import org.slf4j.Logger;

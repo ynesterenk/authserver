@@ -1,12 +1,12 @@
-package com.github.vitalibo.authorization.server.infrastructure.aws.lambda;
+package server.infrastructure.aws.lambda;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.github.vitalibo.authorization.server.core.facade.ClientCredentialsFacade;
-import com.github.vitalibo.authorization.server.infrastructure.aws.Factory;
-import com.github.vitalibo.authorization.shared.core.validation.ErrorState;
-import com.github.vitalibo.authorization.shared.core.validation.ValidationException;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyRequest;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyResponse;
+import server.core.facade.ClientCredentialsFacade;
+import server.infrastructure.aws.Factory;
+import shared.core.validation.ErrorState;
+import shared.core.validation.ValidationException;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
+import shared.infrastructure.aws.gateway.proxy.ProxyResponse;
 import org.apache.http.HttpStatus;
 import org.mockito.Mock;
 import org.mockito.Mockito;

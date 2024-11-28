@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.basic.core;
+package basic.core;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;

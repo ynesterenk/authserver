@@ -1,7 +1,7 @@
-package com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy;
+package shared.infrastructure.aws.gateway.proxy;
 
-import com.github.vitalibo.authorization.shared.TestHelper;
-import com.github.vitalibo.authorization.shared.core.validation.ErrorState;
+import shared.TestHelper;
+import shared.core.validation.ErrorState;
 import org.apache.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.basic.infrastructure.aws;
+package basic.infrastructure.aws;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;

@@ -1,6 +1,6 @@
-package com.github.vitalibo.authorization.shared.core.validation;
+package shared.core.validation;
 
-import com.github.vitalibo.authorization.shared.core.AuthorizationServiceException;
+import shared.core.AuthorizationServiceException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

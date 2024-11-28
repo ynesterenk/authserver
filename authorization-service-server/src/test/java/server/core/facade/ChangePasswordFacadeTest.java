@@ -1,14 +1,14 @@
-package com.github.vitalibo.authorization.server.core.facade;
+package server.core.facade;
 
 import com.amazonaws.util.json.Jackson;
-import com.github.vitalibo.authorization.server.core.UserPool;
-import com.github.vitalibo.authorization.server.core.UserPoolException;
-import com.github.vitalibo.authorization.server.core.model.ChangePasswordRequest;
-import com.github.vitalibo.authorization.server.core.model.ChangePasswordResponse;
-import com.github.vitalibo.authorization.shared.core.validation.ErrorState;
-import com.github.vitalibo.authorization.shared.core.validation.Rule;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyRequest;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyResponse;
+import server.core.UserPool;
+import server.core.UserPoolException;
+import server.core.model.ChangePasswordRequest;
+import server.core.model.ChangePasswordResponse;
+import shared.core.validation.ErrorState;
+import shared.core.validation.Rule;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
+import shared.infrastructure.aws.gateway.proxy.ProxyResponse;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.velocity.Template;

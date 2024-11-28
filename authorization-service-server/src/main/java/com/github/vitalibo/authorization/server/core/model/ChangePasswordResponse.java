@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.server.core.model;
+package server.core.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

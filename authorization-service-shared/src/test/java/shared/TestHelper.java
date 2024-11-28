@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.shared;
+package shared;
 
 import com.amazonaws.util.json.Jackson;
 

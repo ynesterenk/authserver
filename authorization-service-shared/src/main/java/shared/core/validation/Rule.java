@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.shared.core.validation;
+package shared.core.validation;
 
 import java.util.function.BiConsumer;
 

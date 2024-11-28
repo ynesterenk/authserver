@@ -1,15 +1,15 @@
-package com.github.vitalibo.authorization.jwt.infrastructure.aws.lambda;
+package jwt.infrastructure.aws.lambda;
 
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
-import com.github.vitalibo.authorization.jwt.core.Claims;
-import com.github.vitalibo.authorization.jwt.core.Jwt;
-import com.github.vitalibo.authorization.jwt.core.JwtVerificationException;
-import com.github.vitalibo.authorization.jwt.core.PolicyRepository;
-import com.github.vitalibo.authorization.jwt.infrastructure.aws.Factory;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.AuthorizerRequest;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.AuthorizerResponse;
+import jwt.core.Claims;
+import jwt.core.Jwt;
+import jwt.core.JwtVerificationException;
+import jwt.core.PolicyRepository;
+import jwt.infrastructure.aws.Factory;
+import shared.infrastructure.aws.gateway.AuthorizerRequest;
+import shared.infrastructure.aws.gateway.AuthorizerResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class AuthorizerRequestHandler implements RequestHandler<AuthorizerReques
         try {
             Claims claims = jwt.verify(
                 request.getAuthorizationToken());
-
+            logger.info("Claims:", claims);
             Policy policy = rolePolicyRepository.getPolicy(claims);
 
             return new AuthorizerResponse.Builder()
@@ -43,6 +43,7 @@ public class AuthorizerRequestHandler implements RequestHandler<AuthorizerReques
 
         } catch (JwtVerificationException e) {
             // TODO return 401 Unauthorized response
+            logger.error("Jwt Verification Exception", e);
             return null;
         } catch (Exception e) {
             logger.error("Internal Server Error", e);

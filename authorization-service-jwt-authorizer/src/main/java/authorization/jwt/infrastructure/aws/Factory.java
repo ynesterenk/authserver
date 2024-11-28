@@ -1,10 +1,10 @@
-package com.github.vitalibo.authorization.jwt.infrastructure.aws;
+package jwt.infrastructure.aws;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientBuilder;
-import com.github.vitalibo.authorization.jwt.core.Jwt;
-import com.github.vitalibo.authorization.jwt.core.PolicyRepository;
-import com.github.vitalibo.authorization.jwt.infrastructure.aws.iam.RolePolicyRepository;
+import jwt.core.Jwt;
+import jwt.core.PolicyRepository;
+import jwt.infrastructure.aws.iam.RolePolicyRepository;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.jwk.source.RemoteJWKSet;
 import com.nimbusds.jose.proc.SecurityContext;

@@ -1,9 +1,9 @@
-package com.github.vitalibo.authorization.jwt.infrastructure.aws.iam;
+package jwt.infrastructure.aws.iam;
 
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Resource;
 import com.amazonaws.auth.policy.Statement;
-import com.github.vitalibo.authorization.jwt.TestHelper;
+import jwt.TestHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

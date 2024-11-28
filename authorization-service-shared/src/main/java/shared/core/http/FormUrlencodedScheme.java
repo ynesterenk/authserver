@@ -1,7 +1,7 @@
-package com.github.vitalibo.authorization.shared.core.http;
+package shared.core.http;
 
 import com.amazonaws.util.json.Jackson;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyRequest;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
 import lombok.SneakyThrows;
 import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;

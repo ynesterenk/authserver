@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.basic.infrastructure.aws.cognito;
+package basic.infrastructure.aws.cognito;
 
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.AdminInitiateAuthResult;

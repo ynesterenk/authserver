@@ -1,13 +1,13 @@
-package com.github.vitalibo.authorization.server.infrastructure.aws;
+package server.infrastructure.aws;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProviderClient;
-import com.github.vitalibo.authorization.server.core.UserPool;
-import com.github.vitalibo.authorization.server.core.ValidationRules;
-import com.github.vitalibo.authorization.server.core.facade.ChangePasswordFacade;
-import com.github.vitalibo.authorization.server.core.facade.ClientCredentialsFacade;
-import com.github.vitalibo.authorization.server.infrastructure.aws.cognito.CognitoUserPool;
-import com.github.vitalibo.authorization.shared.core.validation.ErrorState;
+import server.core.UserPool;
+import server.core.ValidationRules;
+import server.core.facade.ChangePasswordFacade;
+import server.core.facade.ClientCredentialsFacade;
+import server.infrastructure.aws.cognito.CognitoUserPool;
+import shared.core.validation.ErrorState;
 import lombok.Getter;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;

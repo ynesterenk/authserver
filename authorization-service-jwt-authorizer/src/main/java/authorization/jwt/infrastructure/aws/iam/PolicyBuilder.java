@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.jwt.infrastructure.aws.iam;
+package jwt.infrastructure.aws.iam;
 
 import com.amazonaws.auth.policy.Condition;
 import com.amazonaws.auth.policy.Policy;

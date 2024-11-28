@@ -1,9 +1,9 @@
-package com.github.vitalibo.authorization.server.infrastructure.aws.cognito;
+package server.infrastructure.aws.cognito;
 
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.*;
-import com.github.vitalibo.authorization.server.core.UserPool;
-import com.github.vitalibo.authorization.server.core.UserPoolException;
+import server.core.UserPool;
+import server.core.UserPoolException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,11 +1,11 @@
-package com.github.vitalibo.authorization.jwt.infrastructure.aws.iam;
+package jwt.infrastructure.aws.iam;
 
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
 import com.amazonaws.services.identitymanagement.model.GetRolePolicyRequest;
 import com.amazonaws.services.identitymanagement.model.GetRolePolicyResult;
-import com.github.vitalibo.authorization.jwt.core.Claims;
-import com.github.vitalibo.authorization.jwt.core.PolicyRepository;
+import jwt.core.Claims;
+import jwt.core.PolicyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 

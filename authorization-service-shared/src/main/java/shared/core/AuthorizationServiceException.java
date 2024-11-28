@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.shared.core;
+package shared.core;
 
 public class AuthorizationServiceException extends RuntimeException {
 

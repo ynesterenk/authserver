@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy;
+package shared.infrastructure.aws.gateway.proxy;
 
 import com.amazonaws.util.json.Jackson;
 import lombok.Data;

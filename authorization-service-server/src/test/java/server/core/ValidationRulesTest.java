@@ -1,9 +1,9 @@
-package com.github.vitalibo.authorization.server.core;
+package server.core;
 
-import com.github.vitalibo.authorization.server.core.model.ChangePasswordRequest;
-import com.github.vitalibo.authorization.server.core.model.ClientCredentialsRequest;
-import com.github.vitalibo.authorization.shared.core.validation.ErrorState;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyRequest;
+import server.core.model.ChangePasswordRequest;
+import server.core.model.ClientCredentialsRequest;
+import shared.core.validation.ErrorState;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;

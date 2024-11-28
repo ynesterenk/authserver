@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.shared.infrastructure.aws.gateway;
+package shared.infrastructure.aws.gateway;
 
 import lombok.Data;
 

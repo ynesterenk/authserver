@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.jwt.core;
+package jwt.core;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.KeySourceException;
@@ -18,10 +18,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RequiredArgsConstructor
 public class Jwt {
-
+    private static final Logger logger = LoggerFactory.getLogger(Jwt.class);
     private static final Pattern AUTHORIZATION_HEADER_PATTERN =
         Pattern.compile("Bearer (?<jwt>[0-9A-Za-z.\\-_]*)");
 
@@ -45,11 +47,13 @@ public class Jwt {
         if (!checkSignature(jwt)) {
             throw new JwtVerificationException("JWS object didn't pass the verification");
         }
-
         JWTClaimsSet claimsSet = jwt.getJWTClaimsSet();
+        logger.info("Start getJWTClaimsSet: "+claimsSet);
         checkExpirationTime(claimsSet);
 
-        return ClaimsTranslator.from(claimsSet);
+        Claims claims =ClaimsTranslator.from(claimsSet);
+        logger.info("Start Claims: "+claims);
+        return claims;
     }
 
     private boolean checkSignature(SignedJWT jwt) throws KeySourceException {

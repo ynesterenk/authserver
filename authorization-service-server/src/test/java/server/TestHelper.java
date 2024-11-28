@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.server;
+package server;
 
 import com.amazonaws.util.json.Jackson;
 

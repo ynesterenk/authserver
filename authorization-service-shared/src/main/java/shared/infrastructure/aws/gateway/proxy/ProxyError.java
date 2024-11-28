@@ -1,9 +1,9 @@
-package com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy;
+package shared.infrastructure.aws.gateway.proxy;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.github.vitalibo.authorization.shared.core.validation.ErrorState;
+import shared.core.validation.ErrorState;
 import lombok.Data;
 import org.apache.http.impl.EnglishReasonPhraseCatalog;
 

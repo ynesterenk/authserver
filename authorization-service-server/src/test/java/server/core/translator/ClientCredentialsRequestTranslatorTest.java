@@ -1,8 +1,8 @@
-package com.github.vitalibo.authorization.server.core.translator;
+package server.core.translator;
 
-import com.github.vitalibo.authorization.server.TestHelper;
-import com.github.vitalibo.authorization.server.core.model.ClientCredentialsRequest;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyRequest;
+import server.TestHelper;
+import server.core.model.ClientCredentialsRequest;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

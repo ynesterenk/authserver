@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.basic.core;
+package basic.core;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;

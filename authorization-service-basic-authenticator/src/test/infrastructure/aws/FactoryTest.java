@@ -1,6 +1,6 @@
-package com.github.vitalibo.authorization.basic.infrastructure.aws;
+package basic.infrastructure.aws;
 
-import com.github.vitalibo.authorization.basic.core.HttpBasicAuthenticator;
+import basic.core.HttpBasicAuthenticator;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;

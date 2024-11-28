@@ -1,13 +1,13 @@
-package com.github.vitalibo.authorization.server.core.translator;
+package server.core.translator;
 
 import com.amazonaws.util.StringUtils;
 import com.amazonaws.util.json.Jackson;
-import com.github.vitalibo.authorization.server.core.model.ClientCredentialsRequest;
-import com.github.vitalibo.authorization.shared.core.http.BasicAuthenticationException;
-import com.github.vitalibo.authorization.shared.core.http.BasicScheme;
-import com.github.vitalibo.authorization.shared.core.http.Credentials;
-import com.github.vitalibo.authorization.shared.core.http.FormUrlencodedScheme;
-import com.github.vitalibo.authorization.shared.infrastructure.aws.gateway.proxy.ProxyRequest;
+import server.core.model.ClientCredentialsRequest;
+import shared.core.http.BasicAuthenticationException;
+import shared.core.http.BasicScheme;
+import shared.core.http.Credentials;
+import shared.core.http.FormUrlencodedScheme;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
 
 public class ClientCredentialsRequestTranslator {
 

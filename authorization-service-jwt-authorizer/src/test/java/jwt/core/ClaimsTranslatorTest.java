@@ -1,4 +1,4 @@
-package com.github.vitalibo.authorization.jwt.core;
+package jwt.core;
 
 import com.nimbusds.jwt.JWTClaimsSet;
 import org.testng.Assert;

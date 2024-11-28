@@ -1,7 +1,7 @@
-package com.github.vitalibo.authorization.basic.core;
+package basic.core;
 
-import com.github.vitalibo.authorization.shared.core.http.BasicScheme;
-import com.github.vitalibo.authorization.shared.core.http.Credentials;
+import shared.core.http.BasicScheme;
+import shared.core.http.Credentials;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collections;
