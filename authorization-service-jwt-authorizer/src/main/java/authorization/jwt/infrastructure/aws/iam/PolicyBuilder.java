@@ -1,4 +1,4 @@
-package jwt.infrastructure.aws.iam;
+package authorization.jwt.infrastructure.aws.iam;
 
 import com.amazonaws.auth.policy.Condition;
 import com.amazonaws.auth.policy.Policy;
@@ -13,16 +13,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class PolicyBuilder {
+public class PolicyBuilder {
 
     @Getter
     private final List<Statement> statements;
 
-    PolicyBuilder() {
+    public PolicyBuilder() {
         statements = new ArrayList<>();
     }
 
-    PolicyBuilder withPolicies(List<Policy> policies) {
+    public PolicyBuilder withPolicies(List<Policy> policies) {
         statements.addAll(
             policies.stream()
                 .map(Policy::getStatements)
@@ -32,7 +32,7 @@ class PolicyBuilder {
         return this;
     }
 
-    PolicyBuilder withExpiredAt(ZonedDateTime expiredAt) {
+    public PolicyBuilder withExpiredAt(ZonedDateTime expiredAt) {
         Statement expiredAtStatement = new Statement(Statement.Effect.Deny)
             .withActions(() -> "*")
             .withResources(new Resource("*"))
@@ -45,7 +45,7 @@ class PolicyBuilder {
         return this;
     }
 
-    Policy build() {
+    public  Policy build() {
         return new Policy()
             .withStatements(statements.toArray(new Statement[0]));
     }

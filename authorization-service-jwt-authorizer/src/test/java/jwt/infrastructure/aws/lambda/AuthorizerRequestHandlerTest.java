@@ -1,5 +1,6 @@
 package jwt.infrastructure.aws.lambda;
 
+import authorization.jwt.infrastructure.aws.lambda.AuthorizerRequestHandler;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Resource;
 import com.amazonaws.auth.policy.Statement;
@@ -9,7 +10,7 @@ import jwt.core.Claims;
 import jwt.core.Jwt;
 import jwt.core.JwtVerificationException;
 import jwt.core.PolicyRepository;
-import jwt.infrastructure.aws.Factory;
+import authorization.jwt.infrastructure.aws.Factory;
 import shared.infrastructure.aws.gateway.AuthorizerRequest;
 import shared.infrastructure.aws.gateway.AuthorizerResponse;
 import org.mockito.Mock;

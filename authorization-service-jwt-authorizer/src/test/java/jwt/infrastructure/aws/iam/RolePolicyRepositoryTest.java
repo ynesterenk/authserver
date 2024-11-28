@@ -1,5 +1,6 @@
 package jwt.infrastructure.aws.iam;
 
+import authorization.jwt.infrastructure.aws.iam.RolePolicyRepository;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
 import com.amazonaws.services.identitymanagement.model.GetRolePolicyRequest;

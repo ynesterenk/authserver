@@ -1,4 +1,4 @@
-package jwt.infrastructure.aws.iam;
+package authorization.jwt.infrastructure.aws.iam;
 
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;

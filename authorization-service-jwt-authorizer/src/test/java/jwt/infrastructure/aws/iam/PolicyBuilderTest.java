@@ -1,5 +1,6 @@
 package jwt.infrastructure.aws.iam;
 
+import authorization.jwt.infrastructure.aws.iam.PolicyBuilder;
 import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.auth.policy.Resource;
 import com.amazonaws.auth.policy.Statement;

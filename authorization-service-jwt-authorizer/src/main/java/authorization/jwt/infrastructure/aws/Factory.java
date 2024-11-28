@@ -1,10 +1,10 @@
-package jwt.infrastructure.aws;
+package authorization.jwt.infrastructure.aws;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientBuilder;
 import jwt.core.Jwt;
 import jwt.core.PolicyRepository;
-import jwt.infrastructure.aws.iam.RolePolicyRepository;
+import authorization.jwt.infrastructure.aws.iam.RolePolicyRepository;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.jwk.source.RemoteJWKSet;
 import com.nimbusds.jose.proc.SecurityContext;
@@ -26,7 +26,7 @@ public class Factory {
     private final JWKSource<? extends SecurityContext> jwkSource;
 
     @SneakyThrows
-    Factory(Map<String, String> env) {
+    public Factory(Map<String, String> env) {
         awsRegion = Regions.fromName(env.get(AWS_REGION));
         jwkSource = new RemoteJWKSet<>(
             new URL(String.format(

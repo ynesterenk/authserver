@@ -1,5 +1,6 @@
 package jwt.infrastructure.aws;
 
+import authorization.jwt.infrastructure.aws.Factory;
 import jwt.core.Jwt;
 import jwt.core.PolicyRepository;
 import org.testng.Assert;
