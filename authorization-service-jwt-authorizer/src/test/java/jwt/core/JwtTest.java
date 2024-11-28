@@ -1,5 +1,8 @@
 package jwt.core;
 
+import authorization.jwt.core.Claims;
+import authorization.jwt.core.Jwt;
+import authorization.jwt.core.JwtVerificationException;
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.RSASSASigner;
 import com.nimbusds.jose.jwk.JWKSet;

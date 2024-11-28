@@ -2,8 +2,8 @@ package authorization.jwt.infrastructure.aws;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagementClientBuilder;
-import jwt.core.Jwt;
-import jwt.core.PolicyRepository;
+import authorization.jwt.core.Jwt;
+import authorization.jwt.core.PolicyRepository;
 import authorization.jwt.infrastructure.aws.iam.RolePolicyRepository;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.jwk.source.RemoteJWKSet;

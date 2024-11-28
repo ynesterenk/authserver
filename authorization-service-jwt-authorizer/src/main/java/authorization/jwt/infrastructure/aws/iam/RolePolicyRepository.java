@@ -4,8 +4,8 @@ import com.amazonaws.auth.policy.Policy;
 import com.amazonaws.services.identitymanagement.AmazonIdentityManagement;
 import com.amazonaws.services.identitymanagement.model.GetRolePolicyRequest;
 import com.amazonaws.services.identitymanagement.model.GetRolePolicyResult;
-import jwt.core.Claims;
-import jwt.core.PolicyRepository;
+import authorization.jwt.core.Claims;
+import authorization.jwt.core.PolicyRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 

@@ -1,4 +1,4 @@
-package jwt.core;
+package authorization.jwt.core;
 
 import lombok.Data;
 

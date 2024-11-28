@@ -1,7 +1,9 @@
 package jwt.core;
 
+import authorization.jwt.core.Claims;
 import com.nimbusds.jwt.JWTClaimsSet;
 import org.testng.Assert;
+import authorization.jwt.core.ClaimsTranslator;
 import org.testng.annotations.Test;
 
 import java.text.ParseException;
