@@ -122,7 +122,10 @@ public class JwtTest {
     }
 
     private static RSAKey RSAKey(PublicKey publicKey, String kid) {
-        return new RSAKey((RSAPublicKey) publicKey, KeyUse.SIGNATURE, null, null, kid, null, null, null);
+        return new RSAKey.Builder((RSAPublicKey) publicKey)
+            .keyUse(KeyUse.SIGNATURE)
+            .keyID(kid)
+            .build();
     }
 
     private static JWTClaimsSet claims(Date expirationTime, String... roles) {
