@@ -1,0 +1,23 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "java",
+    "FUNCTIONS_EXTENSION_VERSION": "~4",
+    "AWS_REGION": "us-east-1",
+    "AWS_COGNITO_USER_POOL_ID": "us-east-1_example",
+    "AWS_COGNITO_CLIENT_ID": "example-client-id",
+    "AZURE_B2C_TENANT_ID": "",
+    "AZURE_B2C_CLIENT_ID": "",
+    "AZURE_B2C_CLIENT_SECRET": "",
+    "AZURE_B2C_POLICY_NAME": "B2C_1_signupsignin1",
+    "AZURE_B2C_DOMAIN": "",
+    "AZURE_KEY_VAULT_URL": "",
+    "APPINSIGHTS_INSTRUMENTATIONKEY": ""
+  },
+  "Host": {
+    "LocalHttpPort": 7071,
+    "CORS": "*",
+    "CORSCredentials": false
+  }
+} 

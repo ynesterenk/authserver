@@ -6,6 +6,9 @@ import com.microsoft.azure.functions.HttpStatus;
 import lombok.extern.java.Log;
 import shared.infrastructure.aws.gateway.AuthorizerRequest;
 import shared.infrastructure.aws.gateway.AuthorizerResponse;
+import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
+import shared.infrastructure.aws.gateway.proxy.ProxyResponse;
+import com.amazonaws.services.lambda.runtime.Context;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -128,5 +131,106 @@ public class RequestResponseAdapter {
             headers.put(key, value);
         });
         return headers;
+    }
+
+    /**
+     * Converts Azure Functions HTTP request to AWS Lambda ProxyRequest format
+     */
+    public static ProxyRequest convertAzureToAwsRequest(HttpRequestMessage<Optional<String>> azureRequest) {
+        ProxyRequest proxyRequest = new ProxyRequest();
+        
+        // Set basic request properties
+        proxyRequest.setHttpMethod(azureRequest.getHttpMethod().toString());
+        proxyRequest.setPath(azureRequest.getUri().getPath());
+        proxyRequest.setResource(azureRequest.getUri().getPath()); // Use path as resource for simplicity
+        
+        // Set headers
+        proxyRequest.setHeaders(extractHeaders(azureRequest));
+        
+        // Set query parameters
+        proxyRequest.setQueryStringParameters(extractQueryParameters(azureRequest));
+        
+        // Set body
+        if (azureRequest.getBody().isPresent()) {
+            proxyRequest.setBody(azureRequest.getBody().get());
+        }
+        
+        // Set default values for AWS-specific fields
+        proxyRequest.setPathParameters(new HashMap<>());
+        proxyRequest.setStageVariables(new HashMap<>());
+        proxyRequest.setIsBase64Encoded(false);
+        
+        // Create a minimal request context
+        Map<String, Object> requestContext = new HashMap<>();
+        requestContext.put("httpMethod", azureRequest.getHttpMethod().toString());
+        requestContext.put("path", azureRequest.getUri().getPath());
+        requestContext.put("stage", "prod");
+        requestContext.put("requestId", java.util.UUID.randomUUID().toString());
+        proxyRequest.setRequestContext(requestContext);
+        
+        return proxyRequest;
+    }
+
+    /**
+     * Converts Azure ExecutionContext to AWS Lambda Context
+     */
+    public static Context convertAzureToAwsContext(com.microsoft.azure.functions.ExecutionContext azureContext) {
+        return new AwsContextAdapter(azureContext);
+    }
+
+    /**
+     * Converts AWS Lambda ProxyResponse to Azure Functions HTTP response
+     */
+    public static HttpResponseMessage convertAwsToAzureResponse(
+            ProxyResponse awsResponse, 
+            HttpRequestMessage<Optional<String>> azureRequest) {
+        
+        // Map AWS status code to Azure HttpStatus
+        HttpStatus azureStatus = mapAwsStatusToAzure(awsResponse.getStatusCode());
+        
+        // Create response builder
+        HttpResponseMessage.Builder responseBuilder = azureRequest.createResponseBuilder(azureStatus);
+        
+        // Add headers from AWS response
+        if (awsResponse.getHeaders() != null) {
+            awsResponse.getHeaders().forEach(responseBuilder::header);
+        }
+        
+        // Add default CORS headers if not present
+        if (awsResponse.getHeaders() == null || !awsResponse.getHeaders().containsKey("Access-Control-Allow-Origin")) {
+            responseBuilder.header("Access-Control-Allow-Origin", "*");
+        }
+        if (awsResponse.getHeaders() == null || !awsResponse.getHeaders().containsKey("Content-Type")) {
+            responseBuilder.header("Content-Type", "application/json");
+        }
+        
+        // Set body
+        responseBuilder.body(awsResponse.getBody());
+        
+        return responseBuilder.build();
+    }
+
+    /**
+     * Maps AWS HTTP status codes to Azure Functions HttpStatus enum
+     */
+    private static HttpStatus mapAwsStatusToAzure(Integer awsStatusCode) {
+        if (awsStatusCode == null) {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        
+        switch (awsStatusCode) {
+            case 200: return HttpStatus.OK;
+            case 201: return HttpStatus.CREATED;
+            case 204: return HttpStatus.NO_CONTENT;
+            case 400: return HttpStatus.BAD_REQUEST;
+            case 401: return HttpStatus.UNAUTHORIZED;
+            case 403: return HttpStatus.FORBIDDEN;
+            case 404: return HttpStatus.NOT_FOUND;
+            case 409: return HttpStatus.CONFLICT;
+            case 500: return HttpStatus.INTERNAL_SERVER_ERROR;
+            case 502: return HttpStatus.BAD_GATEWAY;
+            case 503: return HttpStatus.SERVICE_UNAVAILABLE;
+            default: return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
     }
 } 
