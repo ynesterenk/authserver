@@ -9,5 +9,8 @@
 		{
 			"path": "../.github"
 		}
-	]
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "interactive"
+	}
 }
