@@ -1,0 +1,199 @@
+
+# AWS Dependencies Analysis
+
+## Critical AWS SDK Usage
+
+### High Priority AWS SDK Dependencies
+- **AWS Lambda Runtime**: `com.amazonaws.services.lambda.runtime.*`
+  - `RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent>` interfaces
+  - `Context` objects for Lambda execution context
+  - Used in: `ProxyRequestHandler.java`, `AuthorizerRequestHandler.java`
+
+- **AWS Cognito Identity Provider**: `com.amazonaws.services.cognitoidp.*`
+  - `AWSCognitoIdentityProviderClient` for user authentication
+  - Cognito models: `AdminInitiateAuthRequest`, `AdminInitiateAuthResult`, `AuthFlowType`
+  - Used in: `CognitoUserPool.java` (both server and basic-authenticator)
+
+- **AWS IAM**: `com.amazonaws.services.identitymanagement.*`
+  - `AmazonIdentityManagementClientBuilder` for policy management
+  - `GetRolePolicyRequest`, `GetRolePolicyResult` for role-based access
+  - Used in: `RolePolicyRepository.java`
+
+- **AWS Policy Framework**: `com.amazonaws.auth.policy.*`
+  - `Policy`, `Statement`, `Resource`, `Condition` classes
+  - Used for IAM policy generation in JWT authorizer
+  - Used in: `PolicyBuilder.java`, `AuthorizerResponse.java`
+
+### Medium Priority AWS Dependencies
+- **AWS Regions**: `com.amazonaws.regions.Regions`
+  - Region configuration for service clients
+  - Used in all Factory classes
+
+- **AWS Utilities**: `com.amazonaws.util.*`
+  - `StringUtils` for string manipulation
+  - `Jackson` for JSON serialization/deserialization
+  - Used throughout the codebase for data processing
+
+### Lambda Handler Signatures
+
+1. **ServerLambda/ProxyRequestHandler**
+   ```java
+   public class ProxyRequestHandler implements RequestHandler<ProxyRequest, ProxyResponse> {
+       @Override
+       public ProxyResponse handleRequest(ProxyRequest request, Context context)
+   }
+   ```
+
+2. **JwtAuthorizerLambda/AuthorizerRequestHandler**
+   ```java
+   public class AuthorizerRequestHandler implements RequestHandler<AuthorizerRequest, AuthorizerResponse> {
+       @Override
+       public AuthorizerResponse handleRequest(AuthorizerRequest request, Context context)
+   }
+   ```
+
+3. **BasicAuthenticatorLambda/AuthorizerRequestHandler**
+   ```java
+   public class AuthorizerRequestHandler implements RequestHandler<AuthorizerRequest, AuthorizerResponse> {
+       @Override
+       public AuthorizerResponse handleRequest(AuthorizerRequest request, Context context)
+   }
+   ```
+
+### Environment Variables
+- **AWS_REGION**: AWS region configuration (e.g., "eu-west-1")
+- **AWS_COGNITO_USER_POOL_ID**: Cognito User Pool identifier
+- **AWS_COGNITO_CLIENT_ID**: Cognito application client identifier
+
+## Call Graph
+
+```
+Client Request
+    ↓
+API Gateway
+    ↓
+ProxyRequestHandler (ServerLambda)
+    ↓
+Router.match() → Route determination
+    ↓
+Factory.createClientCredentialsFacade() OR Factory.createChangePasswordFacade()
+    ↓
+CognitoUserPool.authenticate()
+    ↓
+AWSCognitoIdentityProviderClient
+    ↓
+AdminInitiateAuth → Cognito User Pool
+    ↓
+JWT Token Response
+
+Parallel Authorization Flow:
+API Gateway → Custom Authorizer
+    ↓
+AuthorizerRequestHandler (JwtAuthorizerLambda)
+    ↓
+Jwt.verify() → JWKS endpoint validation
+    ↓
+RolePolicyRepository.getPolicy()
+    ↓
+AmazonIdentityManagement → IAM Role Policy
+    ↓
+AuthorizerResponse with Policy
+
+Basic Auth Fallback:
+API Gateway → Basic Authorizer
+    ↓
+AuthorizerRequestHandler (BasicAuthenticatorLambda)
+    ↓
+HttpBasicAuthenticator
+    ↓
+CognitoUserPool.authenticate()
+    ↓
+Policy generation for Basic Auth
+```
+
+## Migration Complexity Assessment
+
+### High Risk Areas
+1. **Cognito User Pool Integration**
+   - Complex authentication flows with `AdminInitiateAuth`
+   - Password change challenges and session management
+   - JWT token issuance and validation
+   - **Risk**: Azure AD B2C has different authentication patterns
+
+2. **IAM Policy Generation**
+   - Dynamic policy creation based on JWT claims
+   - Role-based access control mapping
+   - Policy document structure and syntax
+   - **Risk**: Azure RBAC uses different policy format
+
+3. **Lambda Handler Signatures**
+   - AWS-specific request/response objects (`ProxyRequest`, `AuthorizerRequest`)
+   - Context object dependencies
+   - **Risk**: Azure Functions use different handler patterns
+
+4. **JWKS Integration**
+   - Remote JWK Set fetching from Cognito
+   - JWT signature verification with RS256
+   - **Risk**: Azure AD B2C JWKS endpoint format differences
+
+### Low Risk Areas
+1. **Business Logic**
+   - Core validation rules and facades
+   - OAuth 2.0 flow logic
+   - Password validation and user management
+
+2. **Utility Functions**
+   - JSON serialization/deserialization
+   - String manipulation utilities
+   - HTTP Basic Auth parsing
+
+3. **Configuration Management**
+   - Environment variable patterns
+   - Factory pattern implementations
+
+## Security Considerations
+
+### Current Security Implementations to Preserve
+1. **JWT Security**
+   - RS256 signature algorithm
+   - JWKS-based public key validation
+   - Token expiration and validation
+
+2. **Authentication Flows**
+   - OAuth 2.0 Client Credentials flow
+   - HTTP Basic Auth fallback for legacy clients
+   - Admin-initiated authentication with Cognito
+
+3. **Access Control**
+   - IAM policy-based authorization
+   - Role-based access control (RBAC)
+   - Resource-level permissions
+
+4. **Secret Management**
+   - Environment variable-based configuration
+   - No hardcoded credentials in source code
+   - Cognito client secret management
+
+### Compliance Requirements to Maintain
+1. **PCI-DSS Alignment**
+   - Secure credential handling
+   - Encrypted communication (TLS)
+   - Access logging and monitoring
+
+2. **SOX Compliance**
+   - Audit trail maintenance
+   - Role separation and access controls
+   - Change management processes
+
+3. **Data Residency**
+   - Regional data processing requirements
+   - Cross-region replication considerations
+
+### Key Migration Considerations
+1. **Token Compatibility**: Ensure Azure AD B2C tokens maintain same claim structure
+2. **Policy Translation**: Map AWS IAM policies to Azure RBAC roles accurately
+3. **Authentication Parity**: Maintain identical OAuth 2.0 flow behavior
+4. **Security Headers**: Preserve all security-related HTTP headers and responses
+5. **Logging**: Maintain audit trail and security event logging capabilities
+
+This analysis provides a comprehensive foundation for the Azure migration, identifying all critical AWS dependencies that need to be replaced with Azure equivalents while maintaining security and functional parity.
