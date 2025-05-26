@@ -14,6 +14,7 @@
         <module>authorization-service-basic-authenticator</module>
         <module>authorization-service-jwt-authorizer</module>
         <module>authorization-service-server</module>
+        <module>integration</module>
     </modules>
 
 </project>

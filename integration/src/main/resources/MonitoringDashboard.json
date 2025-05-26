@@ -1,0 +1,364 @@
+{
+  "dashboard": {
+    "name": "AuthServer Migration Dashboard",
+    "description": "Comprehensive monitoring for AWS to Azure migration",
+    "version": "1.0",
+    "timeRange": "PT24H",
+    "refreshInterval": "PT5M",
+    "widgets": [
+      {
+        "id": "function-execution-count",
+        "type": "metric",
+        "title": "Function Execution Count",
+        "description": "Number of function executions over time",
+        "query": "requests | where cloud_RoleName contains 'authserver' | summarize count() by bin(timestamp, 5m), operation_Name",
+        "visualization": "timechart",
+        "position": {
+          "x": 0,
+          "y": 0,
+          "width": 6,
+          "height": 4
+        },
+        "properties": {
+          "yAxis": {
+            "title": "Execution Count"
+          },
+          "xAxis": {
+            "title": "Time"
+          }
+        }
+      },
+      {
+        "id": "response-time-p95",
+        "type": "metric", 
+        "title": "Response Time P95",
+        "description": "95th percentile response time",
+        "query": "requests | where cloud_RoleName contains 'authserver' | summarize percentile(duration, 95) by bin(timestamp, 5m)",
+        "visualization": "timechart",
+        "position": {
+          "x": 6,
+          "y": 0,
+          "width": 6,
+          "height": 4
+        },
+        "threshold": {
+          "value": 200,
+          "operator": "GreaterThan",
+          "color": "red"
+        },
+        "properties": {
+          "yAxis": {
+            "title": "Response Time (ms)",
+            "max": 500
+          }
+        }
+      },
+      {
+        "id": "error-rate",
+        "type": "metric",
+        "title": "Error Rate",
+        "description": "Percentage of failed requests",
+        "query": "requests | where cloud_RoleName contains 'authserver' | summarize errorRate = (countif(success == false) * 100.0) / count() by bin(timestamp, 5m)",
+        "visualization": "timechart",
+        "position": {
+          "x": 0,
+          "y": 4,
+          "width": 6,
+          "height": 4
+        },
+        "threshold": {
+          "value": 2.0,
+          "operator": "GreaterThan",
+          "color": "red"
+        },
+        "properties": {
+          "yAxis": {
+            "title": "Error Rate (%)",
+            "max": 10
+          }
+        }
+      },
+      {
+        "id": "authentication-success-rate",
+        "type": "metric",
+        "title": "Authentication Success Rate",
+        "description": "Success rate for different authentication methods",
+        "query": "customMetrics | where name == 'TokenRequests' or name == 'BasicAuthValidations' or name == 'JwtValidations' | summarize sum(value) by bin(timestamp, 5m), name",
+        "visualization": "timechart",
+        "position": {
+          "x": 6,
+          "y": 4,
+          "width": 6,
+          "height": 4
+        },
+        "properties": {
+          "yAxis": {
+            "title": "Success Count"
+          },
+          "legend": {
+            "position": "bottom"
+          }
+        }
+      },
+      {
+        "id": "recent-errors",
+        "type": "log",
+        "title": "Recent Errors",
+        "description": "Latest exceptions and errors",
+        "query": "exceptions | where cloud_RoleName contains 'authserver' | order by timestamp desc | take 50 | project timestamp, type, outerMessage, operation_Name",
+        "visualization": "table",
+        "position": {
+          "x": 0,
+          "y": 8,
+          "width": 12,
+          "height": 6
+        },
+        "properties": {
+          "columns": [
+            {
+              "name": "timestamp",
+              "title": "Time",
+              "width": "20%"
+            },
+            {
+              "name": "type",
+              "title": "Error Type",
+              "width": "20%"
+            },
+            {
+              "name": "outerMessage",
+              "title": "Message",
+              "width": "40%"
+            },
+            {
+              "name": "operation_Name",
+              "title": "Operation",
+              "width": "20%"
+            }
+          ]
+        }
+      },
+      {
+        "id": "b2c-token-validation",
+        "type": "metric",
+        "title": "B2C Token Validation",
+        "description": "JWT token validation metrics",
+        "query": "customMetrics | where name == 'JwtValidations' | summarize sum(value) by bin(timestamp, 5m), tostring(customDimensions.success)",
+        "visualization": "timechart",
+        "position": {
+          "x": 0,
+          "y": 14,
+          "width": 6,
+          "height": 4
+        },
+        "properties": {
+          "yAxis": {
+            "title": "Validation Count"
+          }
+        }
+      },
+      {
+        "id": "system-health",
+        "type": "metric",
+        "title": "System Health",
+        "description": "Overall system health status",
+        "query": "customMetrics | where name == 'System.Health' | summarize avg(value) by bin(timestamp, 5m)",
+        "visualization": "timechart",
+        "position": {
+          "x": 6,
+          "y": 14,
+          "width": 6,
+          "height": 4
+        },
+        "properties": {
+          "yAxis": {
+            "title": "Health Score",
+            "min": 0,
+            "max": 1
+          }
+        }
+      },
+      {
+        "id": "oauth-metrics",
+        "type": "metric",
+        "title": "OAuth Metrics",
+        "description": "OAuth token request metrics",
+        "query": "customMetrics | where name == 'OAuth.ResponseTime' | summarize avg(value), percentile(value, 95) by bin(timestamp, 5m)",
+        "visualization": "timechart",
+        "position": {
+          "x": 0,
+          "y": 18,
+          "width": 6,
+          "height": 4
+        },
+        "properties": {
+          "yAxis": {
+            "title": "Response Time (ms)"
+          }
+        }
+      },
+      {
+        "id": "component-health",
+        "type": "metric",
+        "title": "Component Health",
+        "description": "Health status of individual components",
+        "query": "customMetrics | where name == 'Component.Health' | summarize avg(value) by bin(timestamp, 5m), tostring(customDimensions.component)",
+        "visualization": "timechart",
+        "position": {
+          "x": 6,
+          "y": 18,
+          "width": 6,
+          "height": 4
+        },
+        "properties": {
+          "yAxis": {
+            "title": "Health Status",
+            "min": 0,
+            "max": 1
+          }
+        }
+      }
+    ],
+    "alerts": [
+      {
+        "id": "high-error-rate",
+        "name": "High Error Rate",
+        "description": "Alert when error rate exceeds threshold",
+        "condition": {
+          "query": "requests | where cloud_RoleName contains 'authserver' | summarize errorRate = (countif(success == false) * 100.0) / count() | where errorRate > 2",
+          "timeWindow": "PT5M",
+          "frequency": "PT1M"
+        },
+        "severity": "Error",
+        "actions": [
+          {
+            "type": "email",
+            "recipients": ["devops@company.com", "sre@company.com"]
+          },
+          {
+            "type": "webhook",
+            "url": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+          }
+        ],
+        "enabled": true
+      },
+      {
+        "id": "high-response-time",
+        "name": "High Response Time",
+        "description": "Alert when P95 response time exceeds threshold",
+        "condition": {
+          "query": "requests | where cloud_RoleName contains 'authserver' | summarize p95ResponseTime = percentile(duration, 95) | where p95ResponseTime > 200",
+          "timeWindow": "PT5M",
+          "frequency": "PT1M"
+        },
+        "severity": "Warning",
+        "actions": [
+          {
+            "type": "email",
+            "recipients": ["performance@company.com"]
+          }
+        ],
+        "enabled": true
+      },
+      {
+        "id": "function-failures",
+        "name": "Function Failures",
+        "description": "Alert on multiple function failures",
+        "condition": {
+          "query": "exceptions | where cloud_RoleName contains 'authserver' | summarize count() | where count_ > 5",
+          "timeWindow": "PT5M",
+          "frequency": "PT1M"
+        },
+        "severity": "Critical",
+        "actions": [
+          {
+            "type": "email",
+            "recipients": ["oncall@company.com"]
+          },
+          {
+            "type": "sms",
+            "recipients": ["+1234567890"]
+          }
+        ],
+        "enabled": true
+      },
+      {
+        "id": "b2c-connectivity",
+        "name": "B2C Connectivity Issues",
+        "description": "Alert when B2C connectivity fails",
+        "condition": {
+          "query": "customEvents | where name == 'B2CConnectivityAlert' | summarize count()",
+          "timeWindow": "PT5M",
+          "frequency": "PT1M"
+        },
+        "severity": "Error",
+        "actions": [
+          {
+            "type": "email",
+            "recipients": ["identity@company.com"]
+          }
+        ],
+        "enabled": true
+      },
+      {
+        "id": "system-health-degraded",
+        "name": "System Health Degraded",
+        "description": "Alert when overall system health drops",
+        "condition": {
+          "query": "customMetrics | where name == 'System.Health' | summarize avg(value) | where avg_value < 0.8",
+          "timeWindow": "PT10M",
+          "frequency": "PT2M"
+        },
+        "severity": "Warning",
+        "actions": [
+          {
+            "type": "email",
+            "recipients": ["sre@company.com"]
+          }
+        ],
+        "enabled": true
+      }
+    ],
+    "variables": [
+      {
+        "name": "timeRange",
+        "type": "timeRange",
+        "defaultValue": "PT24H",
+        "options": [
+          "PT1H",
+          "PT6H",
+          "PT24H",
+          "P7D",
+          "P30D"
+        ]
+      },
+      {
+        "name": "environment",
+        "type": "string",
+        "defaultValue": "production",
+        "options": [
+          "development",
+          "staging",
+          "production"
+        ]
+      }
+    ],
+    "filters": [
+      {
+        "name": "cloud_RoleName",
+        "operator": "contains",
+        "value": "authserver"
+      },
+      {
+        "name": "environment",
+        "operator": "equals",
+        "value": "{{environment}}"
+      }
+    ]
+  },
+  "exportConfiguration": {
+    "format": "ARM",
+    "includeAlerts": true,
+    "includeWorkbooks": false
+  }
+} 
