@@ -5,8 +5,9 @@ resource "azurerm_api_management" "main" {
   resource_group_name = var.resource_group_name
   publisher_name      = var.publisher_name
   publisher_email     = var.publisher_email
-  sku_name           = var.sku_name
-  tags               = var.tags
+  sku_name            = var.sku_name
+  virtual_network_type = "External"
+  tags                = var.tags
 
   # VNet integration for internal APIM
   dynamic "virtual_network_configuration" {
@@ -189,11 +190,7 @@ resource "azurerm_api_management_backend" "oauth_backend" {
   protocol            = "http"
   url                 = var.oauth_function_url
 
-  credentials {
-    header = {
-      "x-functions-key" = "{{oauth-function-key}}"
-    }
-  }
+
 }
 
 # Backend configuration for JWT Authorizer Function
@@ -204,11 +201,7 @@ resource "azurerm_api_management_backend" "jwt_backend" {
   protocol            = "http"
   url                 = var.jwt_authorizer_function_url
 
-  credentials {
-    header = {
-      "x-functions-key" = "{{jwt-function-key}}"
-    }
-  }
+
 }
 
 # Backend configuration for Basic Auth Function
@@ -219,11 +212,7 @@ resource "azurerm_api_management_backend" "basic_auth_backend" {
   protocol            = "http"
   url                 = var.basic_auth_function_url
 
-  credentials {
-    header = {
-      "x-functions-key" = "{{basic-auth-function-key}}"
-    }
-  }
+
 }
 
 # Backend configuration for Password Change Function
@@ -234,11 +223,7 @@ resource "azurerm_api_management_backend" "password_backend" {
   protocol            = "http"
   url                 = var.password_change_function_url
 
-  credentials {
-    header = {
-      "x-functions-key" = "{{password-function-key}}"
-    }
-  }
+
 }
 
 # API Operation for OAuth token endpoint
@@ -257,8 +242,6 @@ resource "azurerm_api_management_api_operation" "oauth_token" {
     
     representation {
       content_type = "application/json"
-      schema_id    = "default"
-      type_name    = "TokenRequest"
     }
   }
 
@@ -268,8 +251,6 @@ resource "azurerm_api_management_api_operation" "oauth_token" {
     
     representation {
       content_type = "application/json"
-      schema_id    = "default"
-      type_name    = "TokenResponse"
     }
   }
 }

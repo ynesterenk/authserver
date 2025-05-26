@@ -57,11 +57,17 @@ variable "function_app_plan_sku" {
   validation {
     condition = contains([
       "Y1",    # Consumption
-      "EP1",   # Premium v2
-      "EP2",   # Premium v2
-      "EP3"    # Premium v2
+      "EP1",   # Elastic Premium
+      "EP2",   # Elastic Premium
+      "EP3",   # Elastic Premium
+      "B1",    # Basic
+      "B2",    # Basic
+      "B3",    # Basic
+      "S1",    # Standard
+      "S2",    # Standard
+      "S3"     # Standard
     ], var.function_app_plan_sku)
-    error_message = "Function App plan SKU must be one of: Y1, EP1, EP2, EP3."
+    error_message = "Function App plan SKU must be one of: Y1, EP1, EP2, EP3, B1, B2, B3, S1, S2, S3 (or other VNet compatible SKUs)."
   }
 }
 

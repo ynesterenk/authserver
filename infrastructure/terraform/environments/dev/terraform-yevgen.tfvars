@@ -10,7 +10,7 @@ secondary_location = "North Europe"
 resource_group_name = "authserver-yevgen-dev-rg"
 
 # Function App configuration
-function_app_plan_sku      = "Y1"  # Consumption plan for cost optimization
+function_app_plan_sku      = "B1"  # Consumption plan for cost optimization
 function_app_runtime_version = "11"
 function_timeout           = 30
 function_memory_size       = 512
@@ -21,8 +21,8 @@ apim_publisher_name = "Yevgen Test Development"
 apim_publisher_email = "yevgen_nesterenko@epam.com"
 
 # Azure AD B2C configuration
-b2c_tenant_name = "authserveryevgendev"
-b2c_domain_name = "authserveryevgendev.onmicrosoft.com"
+b2c_tenant_name = "yevgen2005gmail"
+b2c_domain_name = "yevgen2005gmail.onmicrosoft.com"
 
 # Storage configuration
 storage_account_tier             = "Standard"

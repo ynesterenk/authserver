@@ -17,14 +17,16 @@ terraform {
   }
 
   backend "azurerm" {
-    resource_group_name  = "authserver-terraform-state-rg"
-    storage_account_name = "authserverterraformstate"
-    container_name       = "terraform-state"
+    resource_group_name  = "authserver-tfstate-personal-rg"
+    storage_account_name = "authservertfsyevgen"
+    container_name       = "tfstate"
     key                  = "authserver.tfstate"
   }
 }
 
 provider "azurerm" {
+  subscription_id = "1757ec62-3908-48fd-a5c9-2d320fb26e4f"
+  tenant_id       = "b580e134-0c17-4a0e-9fa1-4aff04ad87f6"
   features {
     resource_group {
       prevent_deletion_if_contains_resources = false
@@ -42,6 +44,7 @@ provider "azurerm" {
 }
 
 provider "azuread" {
+  tenant_id = "b580e134-0c17-4a0e-9fa1-4aff04ad87f6"
   # Configuration will be provided via environment variables
 }
 
