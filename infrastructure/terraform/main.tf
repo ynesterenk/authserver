@@ -160,6 +160,7 @@ module "apim" {
   password_change_function_url = module.function_apps.password_change_function_url
   application_insights_id      = module.monitoring.application_insights_id
   application_insights_instrumentation_key = module.monitoring.application_insights_instrumentation_key
+  key_vault_id                 = module.key_vault.id
   allowed_ip_ranges           = var.allowed_ip_ranges
   tags                        = local.common_tags
   
@@ -167,6 +168,7 @@ module "apim" {
     module.resource_group,
     module.function_apps,
     module.monitoring,
-    module.networking
+    module.networking,
+    module.key_vault
   ]
 } 

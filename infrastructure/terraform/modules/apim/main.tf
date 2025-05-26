@@ -498,8 +498,7 @@ resource "azurerm_api_management_diagnostic" "app_insights" {
     body_bytes = 1024
     headers_to_log = [
       "content-type",
-      "content-length",
-      "origin"
+      "content-length"
     ]
   }
 
@@ -507,7 +506,8 @@ resource "azurerm_api_management_diagnostic" "app_insights" {
     body_bytes = 1024
     headers_to_log = [
       "content-type",
-      "accept"
+      "accept",
+      "origin"
     ]
   }
 
@@ -518,4 +518,187 @@ resource "azurerm_api_management_diagnostic" "app_insights" {
       "content-length"
     ]
   }
+}
+
+# Product for OAuth API access
+resource "azurerm_api_management_product" "oauth_product" {
+  product_id            = "oauth-access"
+  api_management_name   = azurerm_api_management.main.name
+  resource_group_name   = var.resource_group_name
+  display_name          = "OAuth API Access"
+  description           = "Access to OAuth token endpoints"
+  subscription_required = true
+  approval_required     = false
+  published             = true
+  
+  # Rate limiting
+  subscriptions_limit = 100
+  
+  # Terms of use
+  terms                = "By using this API, you agree to the terms and conditions."
+}
+
+# Product for Authorization API access
+resource "azurerm_api_management_product" "auth_product" {
+  product_id            = "auth-access"
+  api_management_name   = azurerm_api_management.main.name
+  resource_group_name   = var.resource_group_name
+  display_name          = "Authorization API Access"
+  description           = "Access to JWT and Basic authorization endpoints"
+  subscription_required = true
+  approval_required     = false
+  published             = true
+  
+  # Rate limiting
+  subscriptions_limit = 100
+  
+  # Terms of use
+  terms                = "By using this API, you agree to the terms and conditions."
+}
+
+# Product for full API access (includes all endpoints)
+resource "azurerm_api_management_product" "full_access_product" {
+  product_id            = "full-access"
+  api_management_name   = azurerm_api_management.main.name
+  resource_group_name   = var.resource_group_name
+  display_name          = "Full API Access"
+  description           = "Complete access to all authentication and authorization endpoints"
+  subscription_required = true
+  approval_required     = false
+  published             = true
+  
+  # Rate limiting
+  subscriptions_limit = 50
+  
+  # Terms of use
+  terms                = "By using this API, you agree to the terms and conditions."
+}
+
+# Product for development/testing (no subscription required)
+resource "azurerm_api_management_product" "dev_product" {
+  product_id            = "dev-access"
+  api_management_name   = azurerm_api_management.main.name
+  resource_group_name   = var.resource_group_name
+  display_name          = "Development Access"
+  description           = "Development and testing access - no subscription required"
+  subscription_required = false
+  approval_required     = false
+  published             = true
+  
+  # Terms of use
+  terms                = "Development use only. Not for production traffic."
+}
+
+# Associate OAuth API with products
+resource "azurerm_api_management_product_api" "oauth_product_api" {
+  api_name            = azurerm_api_management_api.oauth_api.name
+  product_id          = azurerm_api_management_product.oauth_product.product_id
+  api_management_name = azurerm_api_management.main.name
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_api_management_product_api" "oauth_full_access" {
+  api_name            = azurerm_api_management_api.oauth_api.name
+  product_id          = azurerm_api_management_product.full_access_product.product_id
+  api_management_name = azurerm_api_management.main.name
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_api_management_product_api" "oauth_dev_access" {
+  api_name            = azurerm_api_management_api.oauth_api.name
+  product_id          = azurerm_api_management_product.dev_product.product_id
+  api_management_name = azurerm_api_management.main.name
+  resource_group_name = var.resource_group_name
+}
+
+# Associate Authorization API with products
+resource "azurerm_api_management_product_api" "auth_product_api" {
+  api_name            = azurerm_api_management_api.auth_api.name
+  product_id          = azurerm_api_management_product.auth_product.product_id
+  api_management_name = azurerm_api_management.main.name
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_api_management_product_api" "auth_full_access" {
+  api_name            = azurerm_api_management_api.auth_api.name
+  product_id          = azurerm_api_management_product.full_access_product.product_id
+  api_management_name = azurerm_api_management.main.name
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_api_management_product_api" "auth_dev_access" {
+  api_name            = azurerm_api_management_api.auth_api.name
+  product_id          = azurerm_api_management_product.dev_product.product_id
+  api_management_name = azurerm_api_management.main.name
+  resource_group_name = var.resource_group_name
+}
+
+# Associate Password API with products
+resource "azurerm_api_management_product_api" "password_full_access" {
+  api_name            = azurerm_api_management_api.password_api.name
+  product_id          = azurerm_api_management_product.full_access_product.product_id
+  api_management_name = azurerm_api_management.main.name
+  resource_group_name = var.resource_group_name
+}
+
+resource "azurerm_api_management_product_api" "password_dev_access" {
+  api_name            = azurerm_api_management_api.password_api.name
+  product_id          = azurerm_api_management_product.dev_product.product_id
+  api_management_name = azurerm_api_management.main.name
+  resource_group_name = var.resource_group_name
+}
+
+# Create subscription for OAuth access
+resource "azurerm_api_management_subscription" "oauth_subscription" {
+  api_management_name = azurerm_api_management.main.name
+  resource_group_name = var.resource_group_name
+  product_id          = azurerm_api_management_product.oauth_product.id
+  display_name        = "OAuth API Subscription"
+  state               = "active"
+  allow_tracing       = true
+}
+
+# Create subscription for full access
+resource "azurerm_api_management_subscription" "full_access_subscription" {
+  api_management_name = azurerm_api_management.main.name
+  resource_group_name = var.resource_group_name
+  product_id          = azurerm_api_management_product.full_access_product.id
+  display_name        = "Full Access Subscription"
+  state               = "active"
+  allow_tracing       = true
+}
+
+# Create subscription for authorization access
+resource "azurerm_api_management_subscription" "auth_subscription" {
+  api_management_name = azurerm_api_management.main.name
+  resource_group_name = var.resource_group_name
+  product_id          = azurerm_api_management_product.auth_product.id
+  display_name        = "Authorization API Subscription"
+  state               = "active"
+  allow_tracing       = true
+}
+
+# Store subscription keys in Key Vault for secure access
+resource "azurerm_key_vault_secret" "oauth_subscription_key" {
+  name         = "apim-oauth-subscription-key"
+  value        = azurerm_api_management_subscription.oauth_subscription.primary_key
+  key_vault_id = var.key_vault_id
+  
+  depends_on = [azurerm_api_management_subscription.oauth_subscription]
+}
+
+resource "azurerm_key_vault_secret" "full_access_subscription_key" {
+  name         = "apim-full-access-subscription-key"
+  value        = azurerm_api_management_subscription.full_access_subscription.primary_key
+  key_vault_id = var.key_vault_id
+  
+  depends_on = [azurerm_api_management_subscription.full_access_subscription]
+}
+
+resource "azurerm_key_vault_secret" "auth_subscription_key" {
+  name         = "apim-auth-subscription-key"
+  value        = azurerm_api_management_subscription.auth_subscription.primary_key
+  key_vault_id = var.key_vault_id
+  
+  depends_on = [azurerm_api_management_subscription.auth_subscription]
 } 

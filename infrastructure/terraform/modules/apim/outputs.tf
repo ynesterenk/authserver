@@ -36,4 +36,44 @@ output "public_ip_addresses" {
 output "private_ip_addresses" {
   description = "Private IP addresses of the API Management instance"
   value       = azurerm_api_management.main.private_ip_addresses
+}
+
+# Subscription key outputs (sensitive)
+output "oauth_subscription_key" {
+  description = "Primary subscription key for OAuth API access"
+  value       = azurerm_api_management_subscription.oauth_subscription.primary_key
+  sensitive   = true
+}
+
+output "full_access_subscription_key" {
+  description = "Primary subscription key for full API access"
+  value       = azurerm_api_management_subscription.full_access_subscription.primary_key
+  sensitive   = true
+}
+
+output "auth_subscription_key" {
+  description = "Primary subscription key for authorization API access"
+  value       = azurerm_api_management_subscription.auth_subscription.primary_key
+  sensitive   = true
+}
+
+# Product information
+output "oauth_product_id" {
+  description = "ID of the OAuth API product"
+  value       = azurerm_api_management_product.oauth_product.product_id
+}
+
+output "auth_product_id" {
+  description = "ID of the Authorization API product"
+  value       = azurerm_api_management_product.auth_product.product_id
+}
+
+output "full_access_product_id" {
+  description = "ID of the Full Access API product"
+  value       = azurerm_api_management_product.full_access_product.product_id
+}
+
+output "dev_product_id" {
+  description = "ID of the Development API product (no subscription required)"
+  value       = azurerm_api_management_product.dev_product.product_id
 } 

@@ -158,6 +158,46 @@ output "apim_developer_portal_url" {
   value       = module.apim.developer_portal_url
 }
 
+# APIM Subscription Keys (Sensitive)
+output "apim_oauth_subscription_key" {
+  description = "Primary subscription key for OAuth API access"
+  value       = module.apim.oauth_subscription_key
+  sensitive   = true
+}
+
+output "apim_full_access_subscription_key" {
+  description = "Primary subscription key for full API access"
+  value       = module.apim.full_access_subscription_key
+  sensitive   = true
+}
+
+output "apim_auth_subscription_key" {
+  description = "Primary subscription key for authorization API access"
+  value       = module.apim.auth_subscription_key
+  sensitive   = true
+}
+
+# APIM Product Information
+output "apim_oauth_product_id" {
+  description = "ID of the OAuth API product"
+  value       = module.apim.oauth_product_id
+}
+
+output "apim_auth_product_id" {
+  description = "ID of the Authorization API product"
+  value       = module.apim.auth_product_id
+}
+
+output "apim_full_access_product_id" {
+  description = "ID of the Full Access API product"
+  value       = module.apim.full_access_product_id
+}
+
+output "apim_dev_product_id" {
+  description = "ID of the Development API product (no subscription required)"
+  value       = module.apim.dev_product_id
+}
+
 # Service Endpoint (equivalent to AWS API Gateway endpoint)
 output "service_endpoint" {
   description = "Main service endpoint URL (equivalent to AWS API Gateway)"
@@ -195,6 +235,7 @@ output "security_info" {
     managed_identity_enabled = true
     private_endpoints_enabled = var.enable_private_endpoints
     b2c_tenant_configured    = true
+    apim_subscription_required = true
   }
 }
 

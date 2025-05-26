@@ -66,6 +66,11 @@ variable "application_insights_instrumentation_key" {
   sensitive   = true
 }
 
+variable "key_vault_id" {
+  description = "ID of the Key Vault for storing subscription keys"
+  type        = string
+}
+
 variable "allowed_ip_ranges" {
   description = "IP ranges allowed to access API Management"
   type        = list(string)
