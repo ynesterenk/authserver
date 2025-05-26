@@ -12,7 +12,7 @@ output "resource_group_id" {
 # Networking Outputs
 output "virtual_network_id" {
   description = "ID of the virtual network"
-  value       = module.networking.virtual_network_id
+  value       = module.networking.vnet_id
 }
 
 output "function_subnet_id" {

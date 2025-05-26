@@ -75,12 +75,7 @@ resource "azurerm_linux_function_app" "oauth_server" {
   }
 
   # VNet integration
-  dynamic "virtual_network_subnet_id" {
-    for_each = var.subnet_id != null ? [var.subnet_id] : []
-    content {
-      subnet_id = virtual_network_subnet_id.value
-    }
-  }
+  virtual_network_subnet_id = var.subnet_id
 
   lifecycle {
     ignore_changes = [
@@ -138,12 +133,7 @@ resource "azurerm_linux_function_app" "jwt_authorizer" {
   }
 
   # VNet integration
-  dynamic "virtual_network_subnet_id" {
-    for_each = var.subnet_id != null ? [var.subnet_id] : []
-    content {
-      subnet_id = virtual_network_subnet_id.value
-    }
-  }
+  virtual_network_subnet_id = var.subnet_id
 
   lifecycle {
     ignore_changes = [
@@ -201,12 +191,7 @@ resource "azurerm_linux_function_app" "basic_authenticator" {
   }
 
   # VNet integration
-  dynamic "virtual_network_subnet_id" {
-    for_each = var.subnet_id != null ? [var.subnet_id] : []
-    content {
-      subnet_id = virtual_network_subnet_id.value
-    }
-  }
+  virtual_network_subnet_id = var.subnet_id
 
   lifecycle {
     ignore_changes = [
@@ -264,12 +249,7 @@ resource "azurerm_linux_function_app" "password_change" {
   }
 
   # VNet integration
-  dynamic "virtual_network_subnet_id" {
-    for_each = var.subnet_id != null ? [var.subnet_id] : []
-    content {
-      subnet_id = virtual_network_subnet_id.value
-    }
-  }
+  virtual_network_subnet_id = var.subnet_id
 
   lifecycle {
     ignore_changes = [

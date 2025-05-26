@@ -18,21 +18,12 @@ resource "azurerm_api_management" "main" {
 
   # Security configuration
   security {
-    enable_backend_ssl30                = false
-    enable_backend_tls10                = false
-    enable_backend_tls11                = false
-    enable_frontend_ssl30               = false
-    enable_frontend_tls10               = false
-    enable_frontend_tls11               = false
-    tls_ecdhe_ecdsa_with_aes256_cbc_sha = false
-    tls_ecdhe_ecdsa_with_aes128_cbc_sha = false
-    tls_ecdhe_rsa_with_aes256_cbc_sha   = false
-    tls_ecdhe_rsa_with_aes128_cbc_sha   = false
-    tls_rsa_with_aes128_gcm_sha256      = false
-    tls_rsa_with_aes256_cbc_sha256      = false
-    tls_rsa_with_aes128_cbc_sha256      = false
-    tls_rsa_with_aes256_cbc_sha         = false
-    tls_rsa_with_aes128_cbc_sha         = false
+    enable_backend_ssl30  = false
+    enable_backend_tls10  = false
+    enable_backend_tls11  = false
+    enable_frontend_ssl30 = false
+    enable_frontend_tls10 = false
+    enable_frontend_tls11 = false
   }
 
   # Identity for managed identity

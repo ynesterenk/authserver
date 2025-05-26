@@ -16,7 +16,7 @@ resource "azurerm_storage_account" "main" {
   access_tier             = "Hot"
   
   # Security settings
-  enable_https_traffic_only      = true
+  https_traffic_only_enabled     = true
   min_tls_version               = "TLS1_2"
   allow_nested_items_to_be_public = false
   
@@ -110,7 +110,7 @@ resource "azurerm_storage_account" "geo_redundant" {
   account_kind            = "StorageV2"
   access_tier             = "Hot"
   
-  enable_https_traffic_only      = true
+  https_traffic_only_enabled     = true
   min_tls_version               = "TLS1_2"
   allow_nested_items_to_be_public = false
   
@@ -136,18 +136,6 @@ resource "azurerm_monitor_diagnostic_setting" "storage_diagnostics" {
   name               = "${var.name_prefix}-storage-diagnostics"
   target_resource_id = azurerm_storage_account.main.id
   log_analytics_workspace_id = var.log_analytics_workspace_id
-
-  enabled_log {
-    category = "StorageRead"
-  }
-  
-  enabled_log {
-    category = "StorageWrite"
-  }
-  
-  enabled_log {
-    category = "StorageDelete"
-  }
 
   metric {
     category = "Transaction"

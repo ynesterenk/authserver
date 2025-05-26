@@ -43,17 +43,18 @@ module "networking" {
 module "storage" {
   source = "./modules/storage"
   
-  resource_group_name      = module.resource_group.name
-  location                = var.location
-  name_prefix             = local.name_prefix
-  account_tier            = var.storage_account_tier
-  account_replication_type = var.storage_account_replication_type
-  enable_backup           = var.enable_backup
-  backup_retention_days   = var.backup_retention_days
-  enable_geo_redundancy   = var.enable_geo_redundancy
-  tags                    = local.common_tags
+  resource_group_name           = module.resource_group.name
+  location                     = var.location
+  name_prefix                  = local.name_prefix
+  account_tier                 = var.storage_account_tier
+  account_replication_type     = var.storage_account_replication_type
+  enable_backup                = var.enable_backup
+  backup_retention_days        = var.backup_retention_days
+  enable_geo_redundancy        = var.enable_geo_redundancy
+  log_analytics_workspace_id   = module.monitoring.log_analytics_workspace_id
+  tags                         = local.common_tags
   
-  depends_on = [module.resource_group]
+  depends_on = [module.resource_group, module.monitoring]
 }
 
 # Key Vault Module
@@ -69,6 +70,8 @@ module "key_vault" {
   object_id                    = data.azurerm_client_config.current.object_id
   enable_private_endpoints     = var.enable_private_endpoints
   private_endpoint_subnet_id   = module.networking.private_endpoint_subnet_id
+  private_endpoint_subnet_name = module.networking.private_endpoint_subnet_name
+  vnet_name                    = module.networking.vnet_name
   tags                         = local.common_tags
   
   depends_on = [module.resource_group, module.networking]
@@ -118,10 +121,13 @@ module "function_apps" {
   storage_account_access_key        = module.storage.storage_account_primary_access_key
   application_insights_connection_string = module.monitoring.application_insights_connection_string
   key_vault_id                      = module.key_vault.id
+  key_vault_name                    = module.key_vault.name
   subnet_id                         = module.networking.function_subnet_id
   b2c_tenant_id                     = module.ad_b2c.tenant_id
   b2c_client_id                     = module.ad_b2c.client_id
   b2c_jwks_url                      = module.ad_b2c.jwks_url
+  b2c_domain_name                   = module.ad_b2c.domain_name
+  environment                       = var.environment
   enable_auto_scaling               = var.enable_auto_scaling
   max_instances                     = var.max_instances
   enable_debug_logging              = var.enable_debug_logging
@@ -153,6 +159,7 @@ module "apim" {
   basic_auth_function_url      = module.function_apps.basic_auth_function_url
   password_change_function_url = module.function_apps.password_change_function_url
   application_insights_id      = module.monitoring.application_insights_id
+  application_insights_instrumentation_key = module.monitoring.application_insights_instrumentation_key
   allowed_ip_ranges           = var.allowed_ip_ranges
   tags                        = local.common_tags
   
