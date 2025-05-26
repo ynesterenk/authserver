@@ -1,0 +1,383 @@
+# Azure Pipeline for AuthServer Infrastructure Deployment
+# AWS to Azure Migration - Terraform Infrastructure
+
+trigger:
+  branches:
+    include:
+      - main
+      - develop
+  paths:
+    include:
+      - infrastructure/terraform/**
+      - infrastructure/azure-pipelines.yml
+
+pr:
+  branches:
+    include:
+      - main
+      - develop
+  paths:
+    include:
+      - infrastructure/terraform/**
+
+variables:
+  - group: authserver-terraform-variables
+  - name: terraformVersion
+    value: '1.5.7'
+  - name: azureServiceConnection
+    value: 'authserver-azure-connection'
+  - name: backendResourceGroup
+    value: 'authserver-terraform-state-rg'
+  - name: backendStorageAccount
+    value: 'authserverterraformstate'
+  - name: backendContainerName
+    value: 'terraform-state'
+
+stages:
+  # Validation Stage
+  - stage: Validate
+    displayName: 'Terraform Validation'
+    jobs:
+      - job: ValidateTerraform
+        displayName: 'Validate Terraform Configuration'
+        pool:
+          vmImage: 'ubuntu-latest'
+        
+        steps:
+          - checkout: self
+            displayName: 'Checkout Repository'
+          
+          - task: TerraformInstaller@0
+            displayName: 'Install Terraform'
+            inputs:
+              terraformVersion: $(terraformVersion)
+          
+          - task: AzureCLI@2
+            displayName: 'Terraform Init'
+            inputs:
+              azureSubscription: $(azureServiceConnection)
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                cd infrastructure/terraform
+                terraform init \
+                  -backend-config="resource_group_name=$(backendResourceGroup)" \
+                  -backend-config="storage_account_name=$(backendStorageAccount)" \
+                  -backend-config="container_name=$(backendContainerName)" \
+                  -backend-config="key=authserver-$(Build.SourceBranchName).tfstate"
+          
+          - task: AzureCLI@2
+            displayName: 'Terraform Validate'
+            inputs:
+              azureSubscription: $(azureServiceConnection)
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                cd infrastructure/terraform
+                terraform validate
+          
+          - task: AzureCLI@2
+            displayName: 'Terraform Format Check'
+            inputs:
+              azureSubscription: $(azureServiceConnection)
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                cd infrastructure/terraform
+                terraform fmt -check -recursive
+          
+          # Security scanning with Checkov
+          - task: Bash@3
+            displayName: 'Install Checkov'
+            inputs:
+              targetType: 'inline'
+              script: |
+                pip install checkov
+          
+          - task: Bash@3
+            displayName: 'Run Checkov Security Scan'
+            inputs:
+              targetType: 'inline'
+              script: |
+                cd infrastructure/terraform
+                checkov -d . --framework terraform --output cli --output junitxml --output-file-path $(Agent.TempDirectory)/checkov-report.xml
+            continueOnError: true
+          
+          - task: PublishTestResults@2
+            displayName: 'Publish Checkov Results'
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '$(Agent.TempDirectory)/checkov-report.xml'
+              testRunTitle: 'Checkov Security Scan'
+            condition: always()
+
+  # Development Deployment Stage
+  - stage: DeployDev
+    displayName: 'Deploy to Development'
+    dependsOn: Validate
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/develop'))
+    jobs:
+      - deployment: DeployToDev
+        displayName: 'Deploy to Development Environment'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'authserver-dev'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                  displayName: 'Checkout Repository'
+                
+                - task: TerraformInstaller@0
+                  displayName: 'Install Terraform'
+                  inputs:
+                    terraformVersion: $(terraformVersion)
+                
+                - task: AzureCLI@2
+                  displayName: 'Terraform Init - Dev'
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      cd infrastructure/terraform
+                      terraform init \
+                        -backend-config="resource_group_name=$(backendResourceGroup)" \
+                        -backend-config="storage_account_name=$(backendStorageAccount)" \
+                        -backend-config="container_name=$(backendContainerName)" \
+                        -backend-config="key=authserver-dev.tfstate"
+                
+                - task: AzureCLI@2
+                  displayName: 'Terraform Plan - Dev'
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      cd infrastructure/terraform
+                      terraform plan \
+                        -var-file="environments/dev/terraform.tfvars" \
+                        -out=tfplan-dev
+                
+                - task: AzureCLI@2
+                  displayName: 'Terraform Apply - Dev'
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      cd infrastructure/terraform
+                      terraform apply -auto-approve tfplan-dev
+
+  # Staging Deployment Stage
+  - stage: DeployStaging
+    displayName: 'Deploy to Staging'
+    dependsOn: Validate
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: DeployToStaging
+        displayName: 'Deploy to Staging Environment'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'authserver-staging'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                  displayName: 'Checkout Repository'
+                
+                - task: TerraformInstaller@0
+                  displayName: 'Install Terraform'
+                  inputs:
+                    terraformVersion: $(terraformVersion)
+                
+                - task: AzureCLI@2
+                  displayName: 'Terraform Init - Staging'
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      cd infrastructure/terraform
+                      terraform init \
+                        -backend-config="resource_group_name=$(backendResourceGroup)" \
+                        -backend-config="storage_account_name=$(backendStorageAccount)" \
+                        -backend-config="container_name=$(backendContainerName)" \
+                        -backend-config="key=authserver-staging.tfstate"
+                
+                - task: AzureCLI@2
+                  displayName: 'Terraform Plan - Staging'
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      cd infrastructure/terraform
+                      terraform plan \
+                        -var-file="environments/staging/terraform.tfvars" \
+                        -out=tfplan-staging
+                
+                - task: AzureCLI@2
+                  displayName: 'Terraform Apply - Staging'
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      cd infrastructure/terraform
+                      terraform apply -auto-approve tfplan-staging
+
+  # Production Deployment Stage
+  - stage: DeployProduction
+    displayName: 'Deploy to Production'
+    dependsOn: DeployStaging
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
+    jobs:
+      - deployment: DeployToProduction
+        displayName: 'Deploy to Production Environment'
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'authserver-production'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                  displayName: 'Checkout Repository'
+                
+                - task: TerraformInstaller@0
+                  displayName: 'Install Terraform'
+                  inputs:
+                    terraformVersion: $(terraformVersion)
+                
+                - task: AzureCLI@2
+                  displayName: 'Terraform Init - Production'
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      cd infrastructure/terraform
+                      terraform init \
+                        -backend-config="resource_group_name=$(backendResourceGroup)" \
+                        -backend-config="storage_account_name=$(backendStorageAccount)" \
+                        -backend-config="container_name=$(backendContainerName)" \
+                        -backend-config="key=authserver-prod.tfstate"
+                
+                - task: AzureCLI@2
+                  displayName: 'Terraform Plan - Production'
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      cd infrastructure/terraform
+                      terraform plan \
+                        -var-file="environments/prod/terraform.tfvars" \
+                        -out=tfplan-prod
+                
+                # Manual approval gate for production
+                - task: ManualValidation@0
+                  displayName: 'Manual Approval for Production Deployment'
+                  inputs:
+                    notifyUsers: 'admin@lseg.com,devops@lseg.com'
+                    instructions: 'Please review the Terraform plan and approve the production deployment.'
+                    timeoutInMinutes: 60
+                
+                - task: AzureCLI@2
+                  displayName: 'Terraform Apply - Production'
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      cd infrastructure/terraform
+                      terraform apply -auto-approve tfplan-prod
+                
+                # Post-deployment validation
+                - task: AzureCLI@2
+                  displayName: 'Post-Deployment Validation'
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      cd infrastructure/terraform
+                      terraform output -json > $(Agent.TempDirectory)/terraform-outputs.json
+                      
+                      # Extract service endpoint
+                      SERVICE_ENDPOINT=$(terraform output -raw service_endpoint)
+                      echo "Service Endpoint: $SERVICE_ENDPOINT"
+                      
+                      # Basic health check
+                      curl -f "$SERVICE_ENDPOINT/health" || exit 1
+                      echo "Health check passed"
+                
+                - task: PublishBuildArtifacts@1
+                  displayName: 'Publish Terraform Outputs'
+                  inputs:
+                    pathToPublish: '$(Agent.TempDirectory)/terraform-outputs.json'
+                    artifactName: 'terraform-outputs'
+
+  # Destroy Stage (Manual trigger only)
+  - stage: Destroy
+    displayName: 'Destroy Infrastructure'
+    dependsOn: []
+    condition: and(always(), eq(variables['Build.Reason'], 'Manual'))
+    jobs:
+      - job: ConfirmDestroy
+        displayName: 'Confirm Destruction'
+        pool: server
+        steps:
+          - task: ManualValidation@0
+            displayName: 'Confirm Infrastructure Destruction'
+            inputs:
+              notifyUsers: 'admin@lseg.com'
+              instructions: 'Are you sure you want to destroy the infrastructure? This action cannot be undone.'
+              timeoutInMinutes: 30
+      
+      - deployment: DestroyInfrastructure
+        displayName: 'Destroy Infrastructure'
+        dependsOn: ConfirmDestroy
+        pool:
+          vmImage: 'ubuntu-latest'
+        environment: 'authserver-destroy'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                  displayName: 'Checkout Repository'
+                
+                - task: TerraformInstaller@0
+                  displayName: 'Install Terraform'
+                  inputs:
+                    terraformVersion: $(terraformVersion)
+                
+                - task: AzureCLI@2
+                  displayName: 'Terraform Destroy'
+                  inputs:
+                    azureSubscription: $(azureServiceConnection)
+                    scriptType: 'bash'
+                    scriptLocation: 'inlineScript'
+                    inlineScript: |
+                      cd infrastructure/terraform
+                      
+                      # Determine environment from variable
+                      ENVIRONMENT=$(variables.destroyEnvironment)
+                      if [ -z "$ENVIRONMENT" ]; then
+                        echo "Environment not specified. Defaulting to dev."
+                        ENVIRONMENT="dev"
+                      fi
+                      
+                      terraform init \
+                        -backend-config="resource_group_name=$(backendResourceGroup)" \
+                        -backend-config="storage_account_name=$(backendStorageAccount)" \
+                        -backend-config="container_name=$(backendContainerName)" \
+                        -backend-config="key=authserver-$ENVIRONMENT.tfstate"
+                      
+                      terraform destroy \
+                        -var-file="environments/$ENVIRONMENT/terraform.tfvars" \
+                        -auto-approve 
