@@ -1,8 +1,8 @@
 {
-  "IsEncrypted": false,
-  "Values": {
+  "IsEncrypted": false,  "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "java",
+    "JAVA_OPTS": "-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=*:5005 -cp lib/authorization-service-shared-1.0-SNAPSHOT.jar",
     "FUNCTIONS_EXTENSION_VERSION": "~4",
     "AWS_REGION": "us-east-1",
     "AWS_COGNITO_USER_POOL_ID": "us-east-1_example",

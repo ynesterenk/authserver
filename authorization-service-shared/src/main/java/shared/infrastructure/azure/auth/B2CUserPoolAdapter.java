@@ -27,27 +27,30 @@ public class B2CUserPoolAdapter {
     private final String clientSecret;
     private final String authority;
     private ConfidentialClientApplication msalApp;
+    private final boolean isLocalDevelopment;
 
     public B2CUserPoolAdapter() {
         this.config = new AzureEnvironmentConfig();
         this.tenantId = config.getTenantId();
         this.clientId = config.getClientId();
+        this.isLocalDevelopment = isLocalDevelopmentMode(config);
         this.clientSecret = getClientSecretFromKeyVault();
         this.authority = config.getB2CAuthority();
         this.msalApp = createMsalApplication();
         
-        log.info("Initialized B2C User Pool Adapter with tenant: " + tenantId);
+        log.info("Initialized B2C User Pool Adapter with tenant: " + tenantId + " (Local dev: " + isLocalDevelopment + ")");
     }
 
     public B2CUserPoolAdapter(AzureEnvironmentConfig config) {
         this.config = config;
         this.tenantId = config.getTenantId();
         this.clientId = config.getClientId();
+        this.isLocalDevelopment = isLocalDevelopmentMode(config);
         this.clientSecret = getClientSecretFromKeyVault();
         this.authority = config.getB2CAuthority();
         this.msalApp = createMsalApplication();
         
-        log.info("Initialized B2C User Pool Adapter with custom config");
+        log.info("Initialized B2C User Pool Adapter with custom config (Local dev: " + isLocalDevelopment + ")");
     }
 
     /**
@@ -55,6 +58,11 @@ public class B2CUserPoolAdapter {
      */
     public String authenticate(String username, String password) throws Exception {
         log.info("Authenticating user: " + username);
+        
+        // For local development, return mock token
+        if (isLocalDevelopment) {
+            return authenticateLocalDevelopment(username, password);
+        }
         
         try {
             // Validate inputs
@@ -85,6 +93,12 @@ public class B2CUserPoolAdapter {
     public void changePassword(String username, String previousPassword, String proposedPassword) throws Exception {
         log.info("Changing password for user: " + username);
         
+        // For local development, simulate success
+        if (isLocalDevelopment) {
+            changePasswordLocalDevelopment(username, previousPassword, proposedPassword);
+            return;
+        }
+        
         try {
             // Validate inputs
             if (StringUtils.isAnyBlank(username, previousPassword, proposedPassword)) {
@@ -104,9 +118,62 @@ public class B2CUserPoolAdapter {
     }
 
     /**
+     * Checks if running in local development mode
+     */
+    private boolean isLocalDevelopmentMode(AzureEnvironmentConfig config) {
+        String tenantId = config.getTenantId();
+        String domain = config.getB2CDomain();
+        String keyVaultUrl = config.getKeyVaultUrl();
+        
+        // Check for mock values that indicate local development
+        return (tenantId != null && tenantId.contains("mock")) ||
+               (domain != null && domain.contains("mock")) ||
+               (keyVaultUrl != null && keyVaultUrl.contains("mock")) ||
+               "UseDevelopmentStorage=true".equals(System.getenv("AzureWebJobsStorage"));
+    }
+
+    /**
+     * Mock authentication for local development
+     */
+    private String authenticateLocalDevelopment(String username, String password) {
+        log.info("Local development mode: Mocking authentication for user: " + username);
+        
+        // Validate basic inputs
+        if (StringUtils.isAnyBlank(username, password)) {
+            throw new IllegalArgumentException("Username and password are required");
+        }
+        
+        // Return a mock JWT token for local testing
+        return "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Im1vY2sta2V5LWlkIn0." +
+               "eyJpc3MiOiJtb2NrLWlzc3VlciIsInN1YiI6IiIgKyB1c2VybmFtZSArICIiLCJhdWQiOiJtb2NrLWF1ZGllbmNlIiwiaWF0IjoxNjAwMDAwMDAwLCJleHAiOjE2MDAwMDM2MDB9." +
+               "mock-signature-for-local-development";
+    }
+
+    /**
+     * Mock password change for local development
+     */
+    private void changePasswordLocalDevelopment(String username, String previousPassword, String proposedPassword) {
+        log.info("Local development mode: Mocking password change for user: " + username);
+        
+        // Validate basic inputs
+        if (StringUtils.isAnyBlank(username, previousPassword, proposedPassword)) {
+            throw new IllegalArgumentException("Username, previous password, and new password are required");
+        }
+        
+        // Simulate successful password change
+        log.info("Password change simulated successfully for user: " + username);
+    }
+
+    /**
      * Creates MSAL application for B2C authentication
      */
     private ConfidentialClientApplication createMsalApplication() {
+        // Skip MSAL creation for local development
+        if (isLocalDevelopment) {
+            log.info("Local development mode: Skipping MSAL application creation");
+            return null;
+        }
+        
         try {
             if (StringUtils.isAnyBlank(clientId, clientSecret, authority)) {
                 throw new IllegalStateException("Missing required B2C configuration: clientId, clientSecret, or authority");
@@ -230,6 +297,18 @@ public class B2CUserPoolAdapter {
      */
     private String getClientSecretFromKeyVault() {
         try {
+            // For local development, skip Azure Key Vault and use environment variable or fallback
+            if (isLocalDevelopmentMode(config)) {
+                log.info("Local development mode: Skipping Azure Key Vault for client secret");
+                String clientSecret = config.getClientSecret();
+                if (StringUtils.isNotBlank(clientSecret)) {
+                    log.info("Using client secret from environment variable");
+                    return clientSecret;
+                }
+                log.info("Using development fallback client secret");
+                return "development-client-secret";
+            }
+            
             // First try to get from environment variable (for local development)
             String clientSecret = config.getClientSecret();
             if (StringUtils.isNotBlank(clientSecret)) {

@@ -23,15 +23,28 @@ public class ApplicationInsightsAdapter {
     public ApplicationInsightsAdapter(AzureEnvironmentConfig config) {
         this.config = config;
         this.telemetryClient = initializeTelemetryClient();
-    }
-
-    /**
+    }    /**
      * Initializes the Application Insights telemetry client
      */
     private TelemetryClient initializeTelemetryClient() {
-        // Return default client - instrumentation key should be configured via environment variables
-        // APPINSIGHTS_INSTRUMENTATIONKEY or connection string
-        return new TelemetryClient();
+        try {
+            // Return default client - instrumentation key should be configured via environment variables
+            // APPINSIGHTS_INSTRUMENTATIONKEY or connection string
+            String connectionString = System.getenv("APPLICATIONINSIGHTS_CONNECTION_STRING");
+            String instrumentationKey = System.getenv("APPINSIGHTS_INSTRUMENTATIONKEY");
+            
+            if (connectionString == null && instrumentationKey == null) {
+                System.out.println("Application Insights not configured - creating disabled client for local development");
+                // Create a TelemetryClient that will be essentially no-op in local dev
+                return new TelemetryClient();
+            }
+            
+            return new TelemetryClient();
+        } catch (Exception e) {
+            System.err.println("Failed to initialize Application Insights client: " + e.getMessage());
+            // Return a basic client for local development
+            return new TelemetryClient();
+        }
     }
 
     /**

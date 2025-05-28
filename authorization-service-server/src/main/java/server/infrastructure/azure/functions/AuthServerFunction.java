@@ -6,7 +6,7 @@ import shared.infrastructure.azure.adapters.RequestResponseAdapter;
 import shared.infrastructure.azure.adapters.ResponseFormatAdapter;
 import shared.infrastructure.azure.monitoring.ApplicationInsightsAdapter;
 import shared.infrastructure.azure.config.AzureEnvironmentConfig;
-import server.infrastructure.aws.lambda.ProxyRequestHandler;
+import server.infrastructure.azure.AzureProxyRequestHandler;
 import shared.infrastructure.aws.gateway.proxy.ProxyRequest;
 import shared.infrastructure.aws.gateway.proxy.ProxyResponse;
 import com.amazonaws.services.lambda.runtime.Context;
@@ -44,7 +44,7 @@ public class AuthServerFunction {
             Context awsContext = RequestResponseAdapter.convertAzureToAwsContext(context);
             
             // Reuse existing AWS handler logic
-            ProxyRequestHandler handler = new ProxyRequestHandler();
+            AzureProxyRequestHandler handler = new AzureProxyRequestHandler();
             ProxyResponse awsResponse = handler.handleRequest(awsRequest, awsContext);
             
             // Track success metrics
@@ -96,7 +96,7 @@ public class AuthServerFunction {
             Context awsContext = RequestResponseAdapter.convertAzureToAwsContext(context);
             
             // Reuse existing AWS handler logic
-            ProxyRequestHandler handler = new ProxyRequestHandler();
+            AzureProxyRequestHandler handler = new AzureProxyRequestHandler();
             ProxyResponse awsResponse = handler.handleRequest(awsRequest, awsContext);
             
             // Track success metrics

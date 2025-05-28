@@ -45,12 +45,29 @@
             <artifactId>azure-security-keyvault-secrets</artifactId>
             <version>4.7.3</version>
         </dependency>
-        
-        <!-- Azure Application Insights -->
+          <!-- Azure Application Insights -->
         <dependency>
             <groupId>com.microsoft.azure</groupId>
             <artifactId>applicationinsights-core</artifactId>
             <version>3.4.19</version>
+        </dependency>
+          <!-- Application Insights Web (includes TelemetryClient) -->
+        <dependency>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>applicationinsights-web</artifactId>
+            <version>3.4.19</version>
+        </dependency>
+        
+        <!-- gRPC dependencies for Azure services compatibility -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-okhttp</artifactId>
+            <version>1.58.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-core</artifactId>
+            <version>1.58.0</version>
         </dependency>
         
         <!-- MSAL4J for Azure AD B2C -->

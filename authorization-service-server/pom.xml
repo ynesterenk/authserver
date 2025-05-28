@@ -2,9 +2,7 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-
-    <parent>
+    <modelVersion>4.0.0</modelVersion>    <parent>
         <groupId>com.github.vitalibo</groupId>
         <artifactId>authorization-service-parent-pom</artifactId>
         <version>1.0-SNAPSHOT</version>
@@ -13,6 +11,10 @@
 
     <artifactId>authorization-service-server</artifactId>
     <packaging>jar</packaging>
+
+    <properties>
+        <functionAppName>authorization-service-server</functionAppName>
+    </properties>
 
     <dependencies>
         <!-- AWS dependencies for backward compatibility -->
@@ -24,12 +26,28 @@
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk-cognitoidp</artifactId>
         </dependency>
-        
-        <!-- Azure Functions support -->
+          <!-- Azure Functions support -->
         <dependency>
             <groupId>com.microsoft.azure.functions</groupId>
             <artifactId>azure-functions-java-library</artifactId>
             <version>3.0.0</version>
+        </dependency>
+        
+        <!-- gRPC dependencies for Azure Functions runtime -->
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-okhttp</artifactId>
+            <version>1.58.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-core</artifactId>
+            <version>1.58.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty-shaded</artifactId>
+            <version>1.58.0</version>
         </dependency>
         
         <dependency>
@@ -111,10 +129,8 @@
                         </manifestEntries>
                     </archive>
                 </configuration>
-            </plugin>
-            
-            <!-- Copy dependencies for Azure Functions deployment - disabled due to reactor build issues -->
-            <!--
+            </plugin>            
+            <!-- Copy dependencies for Azure Functions deployment -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -122,7 +138,7 @@
                 <executions>
                     <execution>
                         <id>copy-dependencies</id>
-                        <phase>install</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
@@ -132,11 +148,11 @@
                             <overWriteSnapshots>false</overWriteSnapshots>
                             <overWriteIfNewer>true</overWriteIfNewer>
                             <excludeScope>provided</excludeScope>
+                            <includeScope>compile</includeScope>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            -->
             
             <!-- Alternative test execution using Exec plugin -->
             <plugin>
