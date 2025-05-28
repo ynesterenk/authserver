@@ -79,7 +79,7 @@ Design B2C tenant to replace AWS Cognito User Pool functionality:
 - **JWKS Endpoint**: `https://{tenant}.b2clogin.com/{tenant}.onmicrosoft.com/{policy}/discovery/v2.0/keys`
 
 #### **User Pool Migration**
-- **Admin User**: `admin` with email `boyarsky.vitaliy@live.com`
+- **Admin User**: `admin` with email `yevgen2005@gmail.com`
 - **Groups**: `ApiGatewayFullAccess` group with appropriate permissions
 - **Password Policy**: Minimum 8 chars, require upper/lower/numbers (match Cognito)
 - **MFA**: Disabled (match current Cognito configuration)

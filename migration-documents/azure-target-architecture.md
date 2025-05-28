@@ -199,7 +199,7 @@ public AuthorizerResponse basicAuthorize(
   "users": [
     {
       "username": "admin",
-      "email": "boyarsky.vitaliy@live.com",
+      "email": "yevgen2005@gmail.com",
       "groups": ["ApiGatewayFullAccess"],
       "attributes": {
         "email_verified": true,
